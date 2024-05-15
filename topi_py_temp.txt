@@ -1,0 +1,12 @@
+from mininet.topo import Topo
+
+class MyTopo( Topo ):
+
+    def build(self):
+
+        # add hosts and switches
+{}
+        # add links
+{}
+
+topos = {{ 'mytopo': ( lambda: MyTopo() ) }}
