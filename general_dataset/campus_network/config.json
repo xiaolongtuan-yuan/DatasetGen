@@ -1,0 +1,692 @@
+[
+  {
+    "device": "sw1",
+    "type": "STP优先级配置",
+    "config": "stp root primary",
+    "des": "在核心交换机sw1上设置为STP的主根桥，以控制网络中的根桥选举，优化网络拓扑结构。"
+  },
+  {
+    "device": "sw2",
+    "type": "端口聚合配置",
+    "config": "port-g group-member e0/0/1 to e0/0/22",
+    "des": "在接入交换机sw2上将多个端口捆绑成一个端口组，增强链路的冗余和负载均衡。"
+  },
+  {
+    "device": "sw1",
+    "type": "Eth-Trunk配置",
+    "config": "int eth-trunk 2\n mode lacp-static\n trunkport gi 0/0/1\n trunkport gi 0/0/4",
+    "des": "在核心交换机sw1上创建Eth-Trunk2，并设置为静态LACP模式，将两个千兆端口捆绑为一条链路，提高链路的冗余和吞吐量。"
+  },
+  {
+    "device": "sw2",
+    "type": "VLAN和Trunk配置",
+    "config": "vlan 10\n port link-type trunk\n port trunk allow-pass vlan all",
+    "des": "在接入交换机sw2上创建VLAN 10，并允许所有VLAN通过该端口，实现不同VLAN间的通信。"
+  },
+  {
+    "device": "sw1",
+    "type": "网关SVI配置",
+    "config": "int vlanif10\n ip add 192.168.10.1 255.255.255.0",
+    "des": "在核心交换机sw1上为VLAN 10配置虚拟接口vlanif10，并分配IP地址，作为该VLAN的默认网关。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP配置",
+    "config": "dhcp enable\n ip pool xiaoshou_1\n gateway-list 192.168.10.1",
+    "des": "在核心交换机sw1上启用DHCP服务，并为VLAN 10创建地址池xiaoshou_1，指定网关为192.168.10.1，自动为该VLAN的设备分配IP地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "出口NAT配置",
+    "config": "ip route-static 0.0.0.0 0 192.168.254.1",
+    "des": "在核心交换机sw1上设置缺省路由，指向出口路由器的接口，以便内网流量可以路由到公网。"
+  },
+  {
+    "device": "R1",
+    "type": "NAT配置",
+    "config": "acl 2000\n rule 5 permit source 192.168.0.0 0.0.255.255\n nat outbound 2000",
+    "des": "在出口路由器R1上创建访问控制列表ACL 2000，允许内网所有源地址的流量，并应用NAT规则，将内网私有地址转换为公网地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "ACL配置",
+    "config": "acl number 3000\n rule 5 permit ip source 192.168.30.0 0.0.0.255 destination 192.168.200.20 0",
+    "des": "在核心交换机sw1上创建ACL 3000，并设置规则允许VLAN 30的IP地址访问财务服务器的IP地址，控制访问权限。"
+  },
+  {
+    "device": "sw2",
+    "type": "Telnet远程管理配置",
+    "config": "telnet server enable\n aaa\n local-user aa privilege level 3 password cipher 123\n user-interface vty 0 4\n authentication-mode aaa",
+    "des": "在接入交换机sw2上启用Telnet服务，并配置AAA认证，允许远程用户通过VTY接口使用Telnet进行设备管理。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 2\n port link-type trunk\n port trunk allow-pass vlan 10 20 999",
+    "des": "在核心交换机sw1的Eth-Trunk2接口上配置VLAN修剪，只允许VLAN 10, 20, 和999通过该链路，减少不必要的广播流量。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN配置",
+    "config": "vlan 800\n int g 0/0/24\n port link-type access\n port default vlan 800",
+    "des": "在核心交换机sw1上创建VLAN 800，并设置端口g 0/0/24为接入端口，指定默认VLAN为800，用于管理流量。"
+  },
+  {
+    "device": "sw1",
+    "type": "SVI接口配置",
+    "config": "int vlanif 800\n ip add 192.168.254.2 255.255.255.0",
+    "des": "在核心交换机sw1上为VLAN 800配置虚拟接口vlanif 800，并分配IP地址192.168.254.2，用于三层交换机和路由器之间的三层对接。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP地址池配置",
+    "config": "ip pool caiwu\n gateway-list 192.168.30.1\n network 192.168.30.0 mask 24\n dns-list 114.114.114.114 8.8.8.8",
+    "des": "在核心交换机sw1上为财务部门创建DHCP地址池caiwu，指定网关为192.168.30.1，网络掩码为24位，并设置DNS服务器地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 10\n dhcp select global",
+    "des": "在核心交换机sw1上为VLAN 10的虚拟接口vlanif 10指定DHCP选择global，允许VLAN 10的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R1",
+    "type": "出口路由配置",
+    "config": "ip route-static 0.0.0.0 0 192.168.254.1\n ip route-static 192.168.0.0 16 192.168.254.2",
+    "des": "在出口路由器R1上设置缺省路由指向核心交换机sw1的IP地址192.168.254.1，以及设置路由使流量从192.168.0.0网段返回到核心交换机sw1。"
+  },
+  {
+    "device": "R1",
+    "type": "NAT端口映射配置",
+    "config": "nat server protocol tcp global 12.1.1.2 80 inside 192.168.200.10 80",
+    "des": "在出口路由器R1上配置NAT端口映射，将公网IP地址12.1.1.2的TCP端口80映射到内网服务器192.168.200.10的80端口，允许外网用户访问内网web服务器。"
+  },
+  {
+    "device": "sw1",
+    "type": "ACL访问控制配置",
+    "config": "acl number 3000\n rule 10 deny ip destination 192.168.200.20 0",
+    "des": "在核心交换机sw1上设置ACL 3000的规则10，拒绝所有目的地为财务服务器192.168.200.20的IP流量，除非特别允许，以增强安全性。"
+  },
+  {
+    "device": "sw2",
+    "type": "管理VLAN配置",
+    "config": "vlan 999\n int vlanif 999\n ip add 192.168.253.2 24",
+    "des": "在接入交换机sw2上创建管理VLAN 999，并为管理VLAN配置虚拟接口vlanif 999及IP地址192.168.253.2，用于远程管理。"
+  },
+  {
+    "device": "sw2",
+    "type": "缺省路由配置",
+    "config": "ip route-s 0.0.0.0 0 192.168.253.1",
+    "des": "在接入交换机sw2上设置缺省路由，指向核心交换机sw1的管理IP地址192.168.253.1，确保管理流量能够正确路由。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN修剪配置",
+    "config": "int Eth-Trunk 2 to Eth-Trunk 5\n port link type trunk\n port turnk allow-pass vlan all",
+    "des": "在核心交换机sw1上对Eth-Trunk 2到Eth-Trunk 5接口进行VLAN修剪，只允许必要的VLAN通过，减少广播流量，提高网络效率。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN批量创建",
+    "config": "vlan batch 10 20 30 40 200",
+    "des": "在核心交换机sw1上批量创建多个VLAN，包括VLAN 10, 20, 30, 40, 和 200，以满足不同部门的网络隔离需求。"
+  },
+  {
+    "device": "sw1",
+    "type": "端口聚合链路类型和VLAN允许通过配置",
+    "config": "port-g g Eth-Trunk 2 to Eth-Trunk 5\n port link type trunk\n port turnk allow-pass vlan all",
+    "des": "在核心交换机sw1上对端口聚合组Eth-Trunk 2到Eth-Trunk 5设置链路类型为trunk，并允许所有VLAN通过，以实现不同VLAN间的通信。"
+  },
+  {
+    "device": "sw2",
+    "type": "端口组配置",
+    "config": "port-g g Ethernet 0/0/3 to Ethernet 0/0/22\n port link-type access\n port default vlan 3 0",
+    "des": "在接入交换机sw2上为端口组Ethernet 0/0/3到Ethernet 0/0/22设置链路类型为access，并指定默认VLAN为3，用于分配给特定的网络设备。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN接口IP地址配置",
+    "config": "int vlanif10\n ip add 192.168.10.1 255.255.255.0",
+    "des": "在核心交换机sw1上为VLAN 10配置虚拟接口vlanif10，并分配IP地址192.168.10.1，作为该VLAN的网关地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP地址池配置",
+    "config": "ip pool jishu\n gateway-list 192.168.40.1\n network 192.168.40.0 mask 255.255.255.0",
+    "des": "在核心交换机sw1上为技术部门创建DHCP地址池jishu，指定网关为192.168.40.1，并设置网络地址为192.168.40.0，用于自动分配IP地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 30\n dhcp select global",
+    "des": "在核心交换机sw1上为VLAN 30的虚拟接口vlanif 30指定DHCP选择global，允许VLAN 30的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R1",
+    "type": "NAT静态路由配置",
+    "config": "ip route-static 192.168.0.0 16 192.168.254.2",
+    "des": "在出口路由器R1上设置静态路由，将目的网络192.168.0.0/16的流量路由到核心交换机sw1的管理接口192.168.254.2。"
+  },
+  {
+    "device": "R1",
+    "type": "NAT服务器端口映射",
+    "config": "nat server protocol tcp global 12.1.1.2 80 inside 192.168.200.10 80",
+    "des": "在出口路由器R1上配置NAT服务器端口映射，将公网IP地址12.1.1.2的TCP端口80映射到内网服务器192.168.200.10的80端口，允许外网用户访问内网web服务器。"
+  },
+  {
+    "device": "sw1",
+    "type": "ACL访问控制配置",
+    "config": "acl number 3000\n rule 5 permit ip source 192.168.30.0 0.0.0.255 destination 192.168.200.20 0",
+    "des": "在核心交换机sw1上创建ACL 3000，并设置规则允许VLAN 30的IP地址访问财务服务器的IP地址192.168.200.20，限制其他部门的访问。"
+  },
+  {
+    "device": "sw1",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 999\n int vlanif 999\n ip add 192.168.253.1 24",
+    "des": "在核心交换机sw1上创建管理VLAN 999，并为管理VLAN配置虚拟接口vlanif 999及IP地址192.168.253.1，用于远程管理核心交换机。"
+  },
+  {
+    "device": "sw2",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 999\n int vlanif 999\n ip add 192.168.253.2 24",
+    "des": "在接入交换机sw2上创建管理VLAN 999，并为管理VLAN配置虚拟接口vlanif 999及IP地址192.168.253.2，用于远程管理接入交换机。"
+  },
+  {
+    "device": "sw2",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 2\n port link-type trunk\n port trunk allow-pass vlan 10 20 999",
+    "des": "在接入交换机sw2上对Eth-Trunk2接口配置VLAN修剪，只允许VLAN 10, 20, 和999通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN接口配置",
+    "config": "vlan 30\n int vlanif30\n ip add 192.168.30.1 255.255.255.0",
+    "des": "在核心交换机sw1上为财务部门的VLAN 30配置虚拟接口vlanif30，并分配IP地址192.168.30.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN接口配置",
+    "config": "vlan 40\n int vlanif40\n ip add 192.168.40.1 255.255.255.0",
+    "des": "在核心交换机sw1上为技术部门的VLAN 40配置虚拟接口vlanif40，并分配IP地址192.168.40.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN接口配置",
+    "config": "vlan 200\n int vlanif200\n ip add 192.168.200.1 255.255.255.0",
+    "des": "在核心交换机sw1上为管理VLAN 200配置虚拟接口vlanif200，并分配IP地址192.168.200.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP地址池配置",
+    "config": "ip pool xiaoshou_1\n gateway-list 192.168.10.1\n network 192.168.10.0 mask 255.255.255.0\n dns-list 114.114.144.114 8.8.8.8",
+    "des": "在核心交换机sw1上为销售部门VLAN 10创建DHCP地址池xiaoshou_1，指定网关为192.168.10.1，并设置DNS服务器地址。"
+  },
+  {
+    "device": "sw1",
+    "type": "DHCP地址池配置",
+    "config": "ip pool xiaoshou_2\n gateway-list 192.168.20.1\n network 192.168.20.0 mask 255.255.255.0\n dns-list 114.114.144.114 8.8.8.8",
+    "des": "在核心交换机sw1上为另一销售部门VLAN 20创建DHCP地址池xiaoshou_2，指定网关为192.168.20.1，并设置DNS服务器地址。"
+  },
+  {
+    "device": "R1",
+    "type": "NAT访问控制列表配置",
+    "config": "acl 2000\n rule 5 permit source 192.168.0.0 0.0.255.255",
+    "des": "在出口路由器R1上创建ACL 2000，并设置规则允许源地址为192.168.0.0/16的所有流量，用于定义NAT转换的流量。"
+  },
+  {
+    "device": "sw2",
+    "type": "管理VLAN缺省路由配置",
+    "config": "ip route-s 0.0.0.0 0 192.168.253.1",
+    "des": "在接入交换机sw2上为管理VLAN 999设置缺省路由，指向核心交换机sw1的管理IP地址192.168.253.1，以确保管理流量能够正确路由。"
+  },
+  {
+    "device": "sw1",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 2\n port link-type trunk\n port trunk allow-pass vlan 10 20 999",
+    "des": "在核心交换机sw1的Eth-Trunk2接口上配置VLAN修剪，只允许VLAN 10, 20, 和999通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw3",
+    "type": "STP优先级配置",
+    "config": "stp root secondary",
+    "des": "在交换机sw3上设置为STP的次根桥，以优化网络拓扑结构并作为备份根桥。"
+  },
+  {
+    "device": "sw4",
+    "type": "端口聚合配置",
+    "config": "port-g group-member e0/0/23 to e0/0/44",
+    "des": "在交换机sw4上将端口e0/0/23到e0/0/44捆绑成一个端口组，增强链路的冗余和负载均衡。"
+  },
+  {
+    "device": "sw5",
+    "type": "Eth-Trunk配置",
+    "config": "int eth-trunk 3\n mode lacp-active\n trunkport gi 0/0/2\n trunkport gi 0/0/3",
+    "des": "在交换机sw5上创建Eth-Trunk3，并设置为活动LACP模式，将两个千兆端口捆绑为一条链路，提高链路的冗余和吞吐量。"
+  },
+  {
+    "device": "sw6",
+    "type": "VLAN和Trunk配置",
+    "config": "vlan 20\n port link-type trunk\n port trunk allow-pass vlan 20 30",
+    "des": "在交换机sw6上创建VLAN 20，并允许VLAN 20和30通过该端口，实现不同VLAN间的通信。"
+  },
+  {
+    "device": "sw3",
+    "type": "网关SVI配置",
+    "config": "int vlanif20\n ip add 192.168.20.1 255.255.255.0",
+    "des": "在交换机sw3上为VLAN 20配置虚拟接口vlanif20，并分配IP地址，作为该VLAN的默认网关。"
+  },
+  {
+    "device": "sw4",
+    "type": "DHCP配置",
+    "config": "dhcp enable\n ip pool yewu_1\n gateway-list 192.168.20.1",
+    "des": "在交换机sw4上启用DHCP服务，并为VLAN 20创建地址池yewu_1，指定网关为192.168.20.1，自动为该VLAN的设备分配IP地址。"
+  },
+  {
+    "device": "sw5",
+    "type": "出口NAT配置",
+    "config": "ip route-static 0.0.0.0 0 192.168.254.3",
+    "des": "在交换机sw5上设置缺省路由，指向出口路由器的接口，以便内网流量可以路由到公网。"
+  },
+  {
+    "device": "R2",
+    "type": "NAT配置",
+    "config": "acl 3000\n rule 5 permit source 192.168.10.0 0.0.0.255\n nat outbound 3000",
+    "des": "在出口路由器R2上创建访问控制列表ACL 3000，允许内网所有源地址的流量，并应用NAT规则，将内网私有地址转换为公网地址。"
+  },
+  {
+    "device": "sw3",
+    "type": "ACL配置",
+    "config": "acl number 4000\n rule 5 permit ip source 192.168.40.0 0.0.0.255 destination 192.168.50.20 0",
+    "des": "在交换机sw3上创建ACL 4000，并设置规则允许VLAN 40的IP地址访问服务器的IP地址，控制访问权限。"
+  },
+  {
+    "device": "sw4",
+    "type": "Telnet远程管理配置",
+    "config": "telnet server enable\n aaa\n local-user bb privilege level 3 password cipher 456\n user-interface vty 0 4\n authentication-mode aaa",
+    "des": "在交换机sw4上启用Telnet服务，并配置AAA认证，允许远程用户通过VTY接口使用Telnet进行设备管理。"
+  },
+  {
+    "device": "sw5",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 3\n port link-type trunk\n port trunk allow-pass vlan 10 30 999",
+    "des": "在交换机sw5的Eth-Trunk3接口上配置VLAN修剪，只允许VLAN 10, 30, 和999通过该链路，减少不必要的广播流量。"
+  },
+  {
+    "device": "sw3",
+    "type": "VLAN配置",
+    "config": "vlan 900\n int g 0/0/25\n port link-type access\n port default vlan 900",
+    "des": "在交换机sw3上创建VLAN 900，并设置端口g 0/0/25为接入端口，指定默认VLAN为900，用于管理流量。"
+  },
+  {
+    "device": "sw3",
+    "type": "SVI接口配置",
+    "config": "int vlanif 900\n ip add 192.168.254.3 255.255.255.0",
+    "des": "在交换机sw3上为VLAN 900配置虚拟接口vlanif 900，并分配IP地址192.168.254.3，用于三层交换机和路由器之间的三层对接。"
+  },
+  {
+    "device": "sw3",
+    "type": "DHCP地址池配置",
+    "config": "ip pool guanli\n gateway-list 192.168.50.1\n network 192.168.50.0 mask 255.255.255.0\n dns-list 123.123.123.123 1.1.1.1",
+    "des": "在交换机sw3上为管理部门创建DHCP地址池guanli，指定网关为192.168.50.1，网络掩码为255.255.255.0，并设置DNS服务器地址。"
+  },
+  {
+    "device": "sw4",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 20\n dhcp select global",
+    "des": "在交换机sw4上为VLAN 20的虚拟接口vlanif 20指定DHCP选择global，允许VLAN 20的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R2",
+    "type": "出口路由配置",
+    "config": "ip route-static 0.0.0.0 0 192.168.254.3\n ip route-static 192.168.10.0 16 192.168.254.3",
+    "des": "在出口路由器R2上设置缺省路由指向交换机sw3的IP地址192.168.254.3，以及设置路由使流量从192.168.10.0网段返回到交换机sw3。"
+  },
+  {
+    "device": "R2",
+    "type": "NAT端口映射配置",
+    "config": "nat server protocol tcp global 12.1.1.3 80 inside 192.168.50.10 80",
+    "des": "在出口路由器R2上配置NAT端口映射，将公网IP地址12.1.1.3的TCP端口80映射到内网服务器192.168.50.10的80端口，允许外网用户访问内网web服务器。"
+  },
+  {
+    "device": "sw3",
+    "type": "ACL访问控制配置",
+    "config": "acl number 4000\n rule 10 deny ip destination 192.168.50.20 0",
+    "des": "在交换机sw3上设置ACL 4000的规则10，拒绝所有目的地为服务器192.168.50.20的IP流量，除非特别允许，以增强安全性。"
+  },
+  {
+    "device": "sw4",
+    "type": "管理VLAN配置",
+    "config": "vlan 998\n int vlanif 998\n ip add 192.168.252.2 24",
+    "des": "在交换机sw4上创建管理VLAN 998，并为管理VLAN配置虚拟接口vlanif 998及IP地址1"
+  },
+  {
+    "device": "sw7",
+    "type": "端口安全配置",
+    "config": "int e0/0/1\n port-security\n port-security violation restrict\n port-security maximum 2",
+    "des": "在交换机sw7的端口e0/0/1上启用端口安全功能，设置最大安全MAC地址数为2，违规时限制动作。"
+  },
+  {
+    "device": "sw8",
+    "type": "VLAN接口配置",
+    "config": "vlan 50\n int vlanif50\n ip add 192.168.50.1 255.255.255.0",
+    "des": "在交换机sw8上为VLAN 50配置虚拟接口vlanif50，并分配IP地址192.168.50.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw9",
+    "type": "VLAN修剪配置",
+    "config": "int e0/0/1\n port link-type trunk\n port trunk allow-pass vlan 5 15 999",
+    "des": "在交换机sw9的端口e0/0/1上配置VLAN修剪，只允许VLAN 5, 15, 和999通过，以减少广播流量。"
+  },
+  {
+    "device": "sw10",
+    "type": "端口镜像配置",
+    "config": "int e0/0/1\n port mirror to e0/0/24",
+    "des": "在交换机sw10上将端口e0/0/1的流量镜像到端口e0/0/24，用于监控该端口的流量。"
+  },
+  {
+    "device": "sw11",
+    "type": "QoS配置",
+    "config": "int e0/0/1\n qos queue 1 car 256k 512k 64k",
+    "des": "在交换机sw11的端口e0/0/1上配置QoS队列1，设置承诺信息速率(CIR)为256kbps，过量信息速率(EIR)为512kbps，溢损率为64kbps。"
+  },
+  {
+    "device": "sw12",
+    "type": "风暴控制配置",
+    "config": "int e0/0/1\n storm-control broadcast level 5",
+    "des": "在交换机sw12的端口e0/0/1上配置风暴控制，设置广播风暴水平为5%，以防止广播风暴攻击。"
+  },
+  {
+    "device": "sw13",
+    "type": "端口聚合链路类型和VLAN允许通过配置",
+    "config": "port-g g Eth-Trunk 6 to Eth-Trunk 10\n port link type trunk\n port trunk allow-pass vlan 5 10 500",
+    "des": "在交换机sw13上对端口聚合组Eth-Trunk 6到Eth-Trunk 10设置链路类型为trunk，并允许VLAN 5, 10, 和500通过。"
+  },
+  {
+    "device": "sw14",
+    "type": "VLAN批量创建",
+    "config": "vlan batch 5 15 25 35 450",
+    "des": "在交换机sw14上批量创建多个VLAN，包括VLAN 5, 15, 25, 35, 和 450，以满足不同部门的网络隔离需求。"
+  },
+  {
+    "device": "sw15",
+    "type": "端口组配置",
+    "config": "port-g g Ethernet 0/0/3 to Ethernet 0/0/22\n port link-type access\n port default vlan 8",
+    "des": "在交换机sw15上为端口组Ethernet 0/0/3到Ethernet 0/0/22设置链路类型为access，并指定默认VLAN为8。"
+  },
+  {
+    "device": "sw16",
+    "type": "VLAN接口IP地址配置",
+    "config": "int vlanif15\n ip add 192.168.15.1 255.255.255.0",
+    "des": "在交换机sw16上为VLAN 15配置虚拟接口vlanif15，并分配IP地址192.168.15.1，作为该VLAN的网关地址。"
+  },
+  {
+    "device": "sw17",
+    "type": "DHCP地址池配置",
+    "config": "ip pool keji\n gateway-list 192.168.60.1\n network 192.168.60.0 mask 255.255.255.0",
+    "des": "在交换机sw17上为技术部门创建DHCP地址池keji，指定网关为192.168.60.1，并设置网络地址为192.168.60.0。"
+  },
+  {
+    "device": "sw18",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 25\n dhcp select global",
+    "des": "在交换机sw18上为VLAN 25的虚拟接口vlanif 25指定DHCP选择global，允许VLAN 25的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R3",
+    "type": "NAT静态路由配置",
+    "config": "ip route-static 192.168.1.0 24 192.168.254.4",
+    "des": "在出口路由器R3上设置静态路由，将目的网络192.168.1.0/24的流量路由到交换机sw18的管理接口192.168.254.4。"
+  },
+  {
+    "device": "R4",
+    "type": "NAT服务器端口映射",
+    "config": "nat server protocol tcp global 12.1.1.4 80 inside 192.168.70.10 80",
+    "des": "在出口路由器R4上配置NAT服务器端口映射，将公网IP地址12.1.1.4的TCP端口80映射到内网服务器192.168.70.10的80端口。"
+  },
+  {
+    "device": "sw19",
+    "type": "ACL访问控制配置",
+    "config": "acl number 5000\n rule 5 permit ip source 192.168.70.0 0.0.0.255 destination 192.168.80.20 0",
+    "des": "在交换机sw19上创建ACL 5000，并设置规则允许VLAN 70的IP地址访问服务器的IP地址192.168.80.20，限制其他部门的访问。"
+  },
+  {
+    "device": "sw20",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 998\n int vlanif 998\n ip add 192.168.252.3 24",
+    "des": "在交换机sw20上创建管理VLAN 998，并为管理VLAN配置虚拟接口vlanif 998及IP地址192.168.252.3，用于远程管理核心交换机。"
+  },
+  {
+    "device": "sw21",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 2\n port link-type trunk\n port trunk allow-pass vlan 8 18 998",
+    "des": "在交换机sw21上对Eth-Trunk2接口配置VLAN修剪，只允许VLAN 8, 18, 和998通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw22",
+    "type": "VLAN接口配置",
+    "config": "vlan 18\n int vlanif18\n ip add 192.168.18.1 255.255.255.0",
+    "des": "在交换机sw22上为VLAN 18配置虚拟接口vlanif18，并分配IP地址192.168.18.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw23",
+    "type": "VLAN接口配置",
+    "config": "vlan 8\n int vlanif8\n ip add 192.168.8.1 255.255.255.0",
+    "des": "在交换机sw23上为技术部门的VLAN 8配置虚拟接口vlanif8，并分配IP地址192.168.8.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw25",
+    "type": "VLAN接口配置",
+    "config": "vlan 300\n int vlanif300\n ip add 192.168.300.1 255.255.255.0",
+    "des": "在交换机sw25上为VLAN 300配置虚拟接口vlanif300，并分配IP地址192.168.300.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw26",
+    "type": "DHCP地址池配置",
+    "config": "ip pool shangwu\n gateway-list 192.168.100.1\n network 192.168.100.0 mask 255.255.255.0",
+    "des": "在交换机sw26上为商务部门创建DHCP地址池shangwu，指定网关为192.168.100.1，并设置网络地址为192.168.100.0。"
+  },
+  {
+    "device": "sw27",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 300\n dhcp select global",
+    "des": "在交换机sw27上为VLAN 300的虚拟接口vlanif 300指定DHCP选择global，允许VLAN 300的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R5",
+    "type": "NAT静态路由配置",
+    "config": "ip route-static 192.168.2.0 24 192.168.254.5",
+    "des": "在出口路由器R5上设置静态路由，将目的网络192.168.2.0/24的流量路由到交换机sw27的管理接口192.168.254.5。"
+  },
+  {
+    "device": "R6",
+    "type": "NAT服务器端口映射",
+    "config": "nat server protocol tcp global 12.1.1.5 80 inside 192.168.100.10 80",
+    "des": "在出口路由器R6上配置NAT服务器端口映射，将公网IP地址12.1.1.5的TCP端口80映射到内网服务器192.168.100.10的80端口。"
+  },
+  {
+    "device": "sw28",
+    "type": "ACL访问控制配置",
+    "config": "acl number 6000\n rule 5 permit ip source 192.168.100.0 0.0.0.255 destination 192.168.110.20 0",
+    "des": "在交换机sw28上创建ACL 6000，并设置规则允许VLAN 100的IP地址访问服务器的IP地址192.168.110.20，限制其他部门的访问。"
+  },
+  {
+    "device": "sw29",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 997\n int vlanif 997\n ip add 192.168.251.3 24",
+    "des": "在交换机sw29上创建管理VLAN 997，并为管理VLAN配置虚拟接口vlanif 997及IP地址192.168.251.3，用于远程管理核心交换机。"
+  },
+  {
+    "device": "sw30",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 3\n port link-type trunk\n port trunk allow-pass vlan 12 22 997",
+    "des": "在交换机sw30上对Eth-Trunk3接口配置VLAN修剪，只允许VLAN 12, 22, 和997通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw31",
+    "type": "VLAN接口配置",
+    "config": "vlan 12\n int vlanif12\n ip add 192.168.12.1 255.255.255.0",
+    "des": "在交换机sw31上为VLAN 12配置虚拟接口vlanif12，并分配IP地址192.168.12.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw32",
+    "type": "VLAN接口配置",
+    "config": "vlan 22\n int vlanif22\n ip add 192.168.22.1 255.255.255.0",
+    "des": "在交换机sw32上为技术部门的VLAN 22配置虚拟接口vlanif22，并分配IP地址192.168.22.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw33",
+    "type": "VLAN接口配置",
+    "config": "vlan 997\n int vlanif997\n ip add 192.168.997.1 255.255.255.0",
+    "des": "在交换机sw33上为管理VLAN 997配置虚拟接口vlanif997，并分配IP地址192.168.997.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw34",
+    "type": "DHCP地址池配置",
+    "config": "ip pool shichang\n gateway-list 192.168.120.1\n network 192.168.120.0 mask 255.255.255.0",
+    "des": "在交换机sw34上为市场部门创建DHCP地址池shichang，指定网关为192.168.120.1，并设置网络地址为192.168.120.0。"
+  },
+  {
+    "device": "sw35",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 120\n dhcp select global",
+    "des": "在交换机sw35上为VLAN 120的虚拟接口vlanif 120指定DHCP选择global，允许VLAN 120的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R7",
+    "type": "NAT静态路由配置",
+    "config": "ip route-static 192.168.3.0 24 192.168.254.6",
+    "des": "在出口路由器R7上设置静态路由，将目的网络192.168.3.0/24的流量路由到交换机sw35的管理接口192.168.254.6。"
+  },
+  {
+    "device": "R8",
+    "type": "NAT服务器端口映射",
+    "config": "nat server protocol tcp global 12.1.1.6 80 inside 192.168.120.10 80",
+    "des": "在出口路由器R8上配置NAT服务器端口映射，将公网IP地址12.1.1.6的TCP端口80映射到内网服务器192.168.120.10的80端口。"
+  },
+  {
+    "device": "sw36",
+    "type": "ACL访问控制配置",
+    "config": "acl number 7000\n rule 5 permit ip source 192.168.120.0 0.0.0.255 destination 192.168.130.20 0",
+    "des": "在交换机sw36上创建ACL 7000，并设置规则允许VLAN 120的IP地址访问服务器的IP地址192.168.130.20，限制其他部门的访问。"
+  },
+  {
+    "device": "sw37",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 996\n int vlanif 996\n ip add 192.168.250.3 24",
+    "des": "在交换机sw37上创建管理VLAN 996，并为管理VLAN配置虚拟接口vlanif 996及IP地址192.168.250.3，用于远程管理核心交换机。"
+  },
+  {
+    "device": "sw38",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 4\n port link-type trunk\n port trunk allow-pass vlan 15 25 996",
+    "des": "在交换机sw38上对Eth-Trunk4接口配置VLAN修剪，只允许VLAN 15, 25, 和996通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw40",
+    "type": "端口镜像配置",
+    "config": "int e0/0/1\n port mirror to e0/0/24",
+    "des": "在交换机sw40上将端口e0/0/1的流量镜像到端口e0/0/24，用于网络监控和故障排查。"
+  },
+  {
+    "device": "sw41",
+    "type": "QoS队列配置",
+    "config": "int e0/0/1\n qos queue 2 car 128k 256k 32k",
+    "des": "在交换机sw41的端口e0/0/1上配置QoS队列2，设置CIR为128kbps，EIR为256kbps，溢损率为32kbps。"
+  },
+  {
+    "device": "sw42",
+    "type": "风暴控制配置",
+    "config": "int e0/0/1\n storm-control multicast level 10",
+    "des": "在交换机sw42的端口e0/0/1上配置风暴控制，设置组播风暴水平为10%，以防止组播风暴攻击。"
+  },
+  {
+    "device": "sw43",
+    "type": "端口安全配置",
+    "config": "int e0/0/1\n port-security\n port-security maximum 1\n port-security violation shutdown",
+    "des": "在交换机sw43的端口e0/0/1上启用端口安全，设置最大安全MAC地址数为1，违规时关闭端口。"
+  },
+  {
+    "device": "sw44",
+    "type": "VLAN批量创建",
+    "config": "vlan batch 600 601 602 603 604",
+    "des": "在交换机sw44上批量创建VLAN 600到604，为特殊项目或隔离需求提供网络分段。"
+  },
+  {
+    "device": "sw45",
+    "type": "端口聚合链路类型和VLAN允许通过配置",
+    "config": "port-g g Eth-Trunk 11 to Eth-Trunk 15\n port link type trunk\n port trunk allow-pass vlan 600 to 604",
+    "des": "在交换机sw45上对端口聚合组Eth-Trunk 11到Eth-Trunk 15设置链路类型为trunk，并允许VLAN 600到604通过。"
+  },
+  {
+    "device": "sw46",
+    "type": "端口组配置",
+    "config": "port-g g Ethernet 0/0/3 to Ethernet 0/0/22\n port link-type access\n port default vlan 900",
+    "des": "在交换机sw46上为端口组Ethernet 0/0/3到Ethernet 0/0/22设置链路类型为access，并指定默认VLAN为900。"
+  },
+  {
+    "device": "sw47",
+    "type": "VLAN接口IP地址配置",
+    "config": "int vlanif601\n ip add 192.168.601.1 255.255.255.0",
+    "des": "在交换机sw47上为VLAN 601配置虚拟接口vlanif601，并分配IP地址192.168.601.1，作为该VLAN的网关地址。"
+  },
+  {
+    "device": "sw48",
+    "type": "DHCP地址池配置",
+    "config": "ip pool zhouqi\n gateway-list 192.168.700.1\n network 192.168.700.0 mask 255.255.255.0",
+    "des": "在交换机sw48上为周末部门创建DHCP地址池zhouqi，指定网关为192.168.700.1，并设置网络地址为192.168.700.0。"
+  },
+  {
+    "device": "sw49",
+    "type": "DHCP选择配置",
+    "config": "int vlanif 602\n dhcp select global",
+    "des": "在交换机sw49上为VLAN 602的虚拟接口vlanif 602指定DHCP选择global，允许VLAN 602的设备从全局地址池中获取IP配置。"
+  },
+  {
+    "device": "R9",
+    "type": "NAT静态路由配置",
+    "config": "ip route-static 192.168.4.0 24 192.168.254.7",
+    "des": "在出口路由器R9上设置静态路由，将目的网络192.168.4.0/24的流量路由到交换机sw49的管理接口192.168.254.7。"
+  },
+  {
+    "device": "R10",
+    "type": "NAT服务器端口映射",
+    "config": "nat server protocol tcp global 12.1.1.7 80 inside 192.168.800.10 80",
+    "des": "在出口路由器R10上配置NAT服务器端口映射，将公网IP地址12.1.1.7的TCP端口80映射到内网服务器192.168.800.10的80端口。"
+  },
+  {
+    "device": "sw50",
+    "type": "ACL访问控制配置",
+    "config": "acl number 8000\n rule 5 permit ip source 192.168.800.0 0.0.0.255 destination 192.168.810.20 0",
+    "des": "在交换机sw50上创建ACL 8000，并设置规则允许VLAN 800的IP地址访问服务器的IP地址192.168.810.20，限制其他部门的访问。"
+  },
+  {
+    "device": "sw51",
+    "type": "管理VLAN接口配置",
+    "config": "vlan 995\n int vlanif 995\n ip add 192.168.249.3 24",
+    "des": "在交换机sw51上创建管理VLAN 995，并为管理VLAN配置虚拟接口vlanif 995及IP地址192.168.249.3，用于远程管理核心交换机。"
+  },
+  {
+    "device": "sw52",
+    "type": "VLAN修剪配置",
+    "config": "int eth-trunk 5\n port link-type trunk\n port trunk allow-pass vlan 18 28 995",
+    "des": "在交换机sw52上对Eth-Trunk5接口配置VLAN修剪，只允许VLAN 18, 28, 和995通过，以减少广播域和提高网络效率。"
+  },
+  {
+    "device": "sw53",
+    "type": "VLAN接口配置",
+    "config": "vlan 18\n int vlanif18\n ip add 192.168.18.1 255.255.255.0",
+    "des": "在交换机sw53上为VLAN 18配置虚拟接口vlanif18，并分配IP地址192.168.18.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw54",
+    "type": "VLAN接口配置",
+    "config": "vlan 28\n int vlanif28\n ip add 192.168.28.1 255.255.255.0",
+    "des": "在交换机sw54上为技术部门的VLAN 28配置虚拟接口vlanif28，并分配IP地址192.168.28.1，作为该VLAN的网关。"
+  },
+  {
+    "device": "sw55",
+    "type": "VLAN接口配置",
+    "config": "vlan 995\n int vlanif995\n ip add 192.168.995.1 255.255.255.0",
+    "des": "在交换机sw55上为管理VLAN 995配置虚拟接口vlanif995，并分配IP地址192.168.995.1，作为该VLAN的网关。"
+  }
+]

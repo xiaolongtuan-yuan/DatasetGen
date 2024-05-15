@@ -1,0 +1,5 @@
+huawei_hospital:file:///Users/zhangyuan/Desktop/%E5%AD%A6%E6%9C%AF/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/SDNconfig/%E5%8D%8E%E4%B8%BA%E5%A4%A7%E5%9E%8B%E5%8C%BB%E9%99%A2%E7%BD%91%E7%BB%9C5000%E4%BA%BA%E6%8E%A5%E5%85%A5%E6%9C%89%E7%BA%BF%E4%B8%8E%E6%97%A0%E7%BA%BF%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7%E9%83%A8%E7%BD%B2%E6%A1%88%E4%BE%8B/%E5%8D%8E%E4%B8%BA%E5%A4%A7%E5%9E%8B%E5%8C%BB%E9%99%A2%E7%BD%91%E7%BB%9C5000%E4%BA%BA%E6%8E%A5%E5%85%A5%E6%9C%89%E7%BA%BF%E4%B8%8E%E6%97%A0%E7%BA%BF%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7%E9%83%A8%E7%BD%B2%E6%A1%88%E4%BE%8B.pdf
+huawei_hospital2:https://support.huawei.com/enterprise/zh/doc/EDOC1100064370/3667b203
+huawei_hotel:https://support.huawei.com/enterprise/zh/doc/EDOC1100064370/4cd30505
+campus_network:https://zhuanlan.zhihu.com/p/421050564
+huawei_market:https://support.huawei.com/enterprise/zh/doc/EDOC1100064370/4bbec11c

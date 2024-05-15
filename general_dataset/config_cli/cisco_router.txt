@@ -1,0 +1,189 @@
+configure terminal: 进入全局配置模式。
+hostname name: 设置路由器的名称。
+enable secret password: 设置加密密码以防止未授权访问路由器。
+no ip domain-lookup: 禁用路由器将不熟悉的单词（拼写错误）转换为IP地址。
+interface type number: 进入特定接口的配置模式。
+ip address ip-address mask: 为指定的接口设置IP地址和子网掩码。
+no shutdown: 启用接口，将其状态从行政关闭更改为行政开启。
+exit: 退出当前配置模式，返回到全局配置模式。
+access-list number permit/deny source-addr [source-mask]: 创建标准或扩展的访问控制列表，允许或拒绝特定来源的流量。
+ip access-list extended name: 创建命名的扩展访问控制列表。
+vtp mode mode: 设置VTP（VLAN趋势协议）模式，可以是server（服务器模式）、client（客户端模式）或transparent（透明模式）。
+vtp domain domain-name: 设置VTP域名，使得网络中的所有交换机共享VTP信息。
+vtp password password: 设置VTP密码，以增加安全性。
+dot1x system-auth-control: 启用IEEE 802.1x端口基础认证。
+aaa new-model: 启用AAA（认证、授权和计费）新模型。
+aaa authentication dot1x default group radius: 设置默认的RADIUS服务器组用于802.1x认证。
+interface interface_id: 选择用于配置的接口。
+switchport mode access: 设置交换端口模式为访问模式。
+authentication port-control auto: 设置端口的认证状态控制为自动。
+dot1x pae authenticator: 设置接口为802.1x认证的认证器（Authenticator）。
+spanning-tree vlan VLAN_ID port-priority priority-value: 为特定VLAN设置接口的STP（生成树协议）端口优先级。
+spanning-tree cost interface cost-value: 设置接口的STP路径成本。
+ip route prefix mask { ip-address | interface } [ administrative distance ]: 设置静态路由。
+crypto isakmp policy priority: 配置IKE（Internet密钥交换）策略。
+encryption { des | 3des | aes | aes 192 | aes 256 }: 设置加密算法。
+hash { md5 | sha }: 设置散列算法。
+authentication { rsa-sig | rsa-encr | pre-share }: 设置认证方法。
+group { 1 | 2 | 5 }: 设置Diffie-Hellman组。
+lifetime seconds: 设置IKE SA（安全关联）的生命周期。
+crypto ipsec profile profile-name: 配置IPSec（IP安全）配置文件。
+crypto ipsec transform-set transform-set-name: 定义IPSec转换集，即一组安全协议和算法。
+crypto ipsec security-association lifetime { seconds seconds | kilobytes kilobytes }: 指定IPSec安全关联的生命周期。
+crypto dynamic-map dynamic-map-name dynamic-seq-num: 创建动态加密地图条目。
+set transform-set transform-set-name: 指定加密地图条目可以使用的转换集。
+reverse-route: 创建加密地图条目的源代理信息。
+crypto map map-name seq-num [ ipsec-isakmp ] [ dynamic dynamic-map-name ] [ discover ] [ profile profile-name ]: 创建加密地图配置文件。
+interface type number: 进入特定类型的接口配置模式。
+crypto map map-name: 将加密地图应用到接口。
+ip cef: 启用IP快速交换。
+ip forward-protocol nd: 启用网络发现协议的IP转发。
+ip http server: 启用HTTP服务器。
+ip http secure-server: 启用安全的HTTP服务器。
+ip route destination mask next-hop: 配置静态IP路由。
+ip nat inside source list access-list-number interface interface_id overload: 配置NAT重载。
+access-list number permit/deny protocol source source-wildcard destination destination-wildcard: 设置访问控制列表以允许或拒绝特定的流量。
+control-plane: 进入控制平面配置模式，用于配置和管理路由器的控制平面。
+line type number: 进入特定类型的行（接口）配置模式，如控制台、VTY行等。
+scheduler allocate memory cpu: 分配内存和CPU资源。
+crypto ipsec client ezvpn name: 创建一个Cisco Easy VPN远程配置。
+group group-name key group-key: 为VPN连接指定IPSec组和密钥值。
+peer { ipaddress | hostname }: 为VPN连接指定对等IP地址或主机名。
+mode { client | network-extension | network extension plus }: 指定VPN操作模式。
+crypto isakmp keepalive seconds: 启用死对等检测消息。
+interface type number: 进入接口配置模式。
+tunnel source interface-type number: 为GRE隧道指定源接口。
+tunnel destination default-gateway-ip-address: 为GRE隧道指定目的IP地址。
+ip access-list { standard | extended } access-list-name: 进入标准或扩展的ACL配置模式。
+permit protocol source source-wildcard destination destination-wildcard: 在ACL中添加允许特定协议流量的规则。
+aaa new-model: 启用新模型的AAA（认证、授权和计费）。
+aaa authentication login default local: 设置默认的AAA认证方法为本地认证。
+aaa session-id common: 设置AAA会话ID为公共。
+crypto pki trustpoint trustpoint-name: 配置PKI信任点。
+crypto pki certificate chain trustpoint-name: 配置PKI证书链。
+username username privilege level password password: 配置用户名、权限级别和密码。
+redundancy: 进入冗余配置模式。
+crypto ikev2 authorization policy policy-name route: 配置IKEv2授权策略。
+crypto ikev2 keyring keyring-name peer peer-address pre-shared-key key: 配置IKEv2密钥环和预共享密钥。
+crypto ikev2 profile profile-name: 配置IKEv2配置文件。
+interface interface-name ip address ip-address subnet-mask: 为接口配置IP地址和子网掩码。
+interface interface-name tunnel mode ipsec ipv4: 设置接口为IPSec隧道模式。
+router routing-protocol process-id: 进入特定路由协议的配置模式。
+network ip-address: 在路由协议配置中指定网络。
+ip local pool pool-name start-ip-address [ end-ip-address ]: 配置本地IP地址池。
+ip classless: 启用无类路由。
+ip cef: 启用Cisco快速交换。
+mls qos: 进入QoS配置模式。
+service-policy input/output policy-map-name: 应用服务策略到接口。
+class-map class-map-name: 定义流量的类映射。
+match access-group access-group-number: 使用访问控制列表匹配流量。
+policy-map policy-map-name: 定义策略映射。
+class class-name: 指定策略映射中的类。
+priority: 设置类的优先级队列。
+bandwidth bandwidth: 分配带宽给类。
+random-detect dscp-based: 为WRED配置基于DSCP的检测。
+random-detect dscp dscp-value min-threshold max-threshold: 设置WRED的DSCP值和阈值。
+service-policy policy-map-name: 应用服务策略。
+show running-config: 显示当前运行的配置。
+show interface interface-name: 显示接口的配置和状态。
+show ip route: 显示IP路由表。
+show access-lists: 显示访问控制列表。
+show interface interface-name: 显示特定网络接口的状态和配置信息。
+show running-config: 显示当前设备的运行配置。
+show ip route: 显示IP路由表。
+show access-lists: 显示访问控制列表（ACL）的详细信息。
+show cdp: 显示CDP（Cisco Discovery Protocol）邻居信息。
+show version: 显示设备的软件版本和硬件信息。
+show vtp status: 显示VTP（VLAN Trunking Protocol）的状态。
+show dhcp leases: 显示DHCP服务器分配的IP租约信息。
+show dns: 显示DNS（域名系统）的配置和缓存信息。
+show nat translations: 显示NAT（网络地址转换）的当前转换信息。
+show ip ospf: 显示OSPF（开放最短路径优先）路由协议的状态和邻居信息。
+show ip eigrp: 显示EIGRP（增强内部网关路由协议）的路由表和邻居信息。
+show ip bgp: 显示BGP（边界网关协议）的路由信息和邻居状态。
+show ip nhrp: 显示NHRP（下一跳解析协议）的缓存和映射信息。
+show ip rip: 显示RIP（路由信息协议）的路由表。
+show interface interface-name description: 显示接口的描述信息。
+show interface interface-name status: 显示接口的行协议状态。
+show interface interface-name counters: 显示接口的统计计数器信息。
+show memory: 显示设备的内存使用情况。
+show processes: 显示设备的进程信息。
+show logging: 显示设备的日志配置和日志条目。
+show running-config interface interface-name: 显示特定接口的运行配置。
+show startup-config interface interface-name: 显示特定接口的启动配置。
+write memory: 将设备的运行配置写入启动配置。
+write terminal: 将当前的配置输出到终端。
+configure replace: 替换设备的启动配置。
+configure memory: 从启动配置中加载配置到运行配置。
+copy running-config startup-config: 复制运行配置到启动配置。
+copy startup-config running-config: 复制启动配置到运行配置。
+erase startup-config: 擦除启动配置。
+reload: 重新加载（重启）设备。
+no command: 取消或关闭之前启用的配置命令。
+interface interface-name: 进入特定网络接口的配置模式。
+ip address ip-address subnet-mask: 为接口分配IP地址和子网掩码。
+ip helper-address ip-address: 为DHCP或NAT配置辅助地址。
+ip ospf process-id area area-id: 为接口配置OSPF路由协议。
+ip eigrp process-id: 为接口配置EIGRP路由协议。
+ip dhcp pool pool-name: 开始配置DHCP地址池。
+ip dhcp pool pool-name default-router ip-address: 在DHCP地址池中设置默认网关。
+ip dhcp excluded-address: 设置DHCP地址排除范围。
+ip dhcp server ip-address: 指定DHCP服务器的IP地址。
+ip dhcp relay information option: 配置DHCP中继信息选项。
+ip route destination mask next-hop: 添加静态路由。
+ip route 0.0.0.0 0.0.0.0 next-hop: 添加默认网关的静态路由。
+ip nat pool pool-name start-ip end-ip: 定义NAT地址池。
+ip nat inside source list access-list-number pool pool-name: 将内部源流量映射到NAT地址池。
+ip nat inside source static local-ip global-ip: 定义静态NAT转换。
+ip classless: 允许路由器处理无类IP路由更新。
+service timestamps debug datetime msec: 为调试信息启用时间戳。
+service timestamps log datetime msec: 为日志信息启用时间戳。
+no auto-mdix: 禁用自动MDIX（交叉直通）。
+no ip address: 移除接口的IP地址配置。
+shutdown: 禁用网络接口。
+no shutdown: 启用网络接口。
+line line-type line-number: 进入特定行（如控制台、VTY行等）的配置模式。
+login: 启用行的登录功能。
+password password: 设置行的登录密码。
+exec-timeout minutes seconds: 设置EXEC会话的超时时间。
+logging buffered size: 设置日志缓冲区的大小。
+logging level level-name: 设置设备上特定设施的日志记录级别。
+snmp-server community community-string acl-number: 为SNMP设置社区字符串和访问控制列表编号。
+snmp-server location location-name: 设置SNMP服务器的位置。
+snmp-server contact contact-name: 设置SNMP服务器的联系人信息。
+snmp-server enable traps: 启用SNMP陷阱消息。
+radius-server host radius-server-ip: 配置RADIUS服务器的IP地址。
+tacacs-server host tacacs-server-ip: 配置TACACS+服务器的IP地址。
+ssh server algorithm encryption-algorithm: 配置SSH服务器使用的加密算法。
+ssh client algorithm encryption-algorithm: 配置SSH客户端使用的加密算法。
+ip access-list standard acl-name: 创建一个标准IP访问列表。
+ip access-list extended acl-name: 创建一个扩展IP访问列表。
+access-group acl-number in/out interface interface-name: 将访问列表应用于指定的接口入方向或出方向。
+ip nat pool pool-name start-addr end-addr: 定义一个用于NAT的IP地址池。
+ip nat inside source list acl-number pool pool-name: 将内部网络的源地址转换为NAT池中的地址。
+ip route network subnet-mask next-hop-ip: 添加一个静态IP路由。
+router ospf process-id: 进入OSPF路由协议的配置模式。
+router-id ip-address: 为OSPF路由器指定一个唯一的路由器ID。
+area area-number: 配置OSPF区域。
+network ip-address wildcard-mask area area-number: 将网络声明到OSPF区域中。
+router eigrp as-number: 进入EIGRP路由协议的配置模式。
+eigrp router-id ip-address: 为EIGRP指定一个唯一的路由器ID。
+passive-interface default: 默认情况下，所有接口都处于被动模式。
+no passive-interface interface-name: 使指定的接口不处于被动模式，允许EIGRP在其上形成邻居关系。
+ip multicast-routing: 启用IP组播路由。
+ip pim sparse-mode: 配置PIM稀疏模式，适用于大多数组成员不在直连网络上的场景。
+ip pim dense-mode: 配置PIM密集模式，适用于大多数组成员都在直连网络上的场景。
+interface interface-name ip pim sparse-mode/dense-mode: 在接口上启用PIM并配置其模式。
+bfd interval interval min_rx min-rx multiplier multiplier: 配置BFD（双向转发检测）的检测间隔、最小接收间隔和检测时间的乘数。
+router bgp as-number: 进入BGP路由协议的配置模式。
+neighbor neighbor-ip remote-as as-number: 配置BGP邻居关系。
+network ip-prefix mask subnet-mask: 向BGP宣告一个网络。
+router-id ip-address: 为BGP路由器指定一个路由器ID。
+bgp log-neighbor-changes: 启用BGP邻居状态变更的日志记录。
+multilink bundle-name bundle-name: 为多个物理链路配置一个多链路捆绑。
+ppp multilink: 在接口上启用PPP多链路。
+load-balancing method: 配置负载均衡方法。
+vrrp group-number ip virtual-ip: 配置VRRP（虚拟路由器冗余协议）组和虚拟IP地址。
+vrrp group-number authentication md5 auth-string: 为VRRP配置MD5认证。
+vrrp group-number authentication sha256: 使用SHA256进行VRRP认证。
+vrrp group-number priority priority-value: 设置VRRP组的优先级。

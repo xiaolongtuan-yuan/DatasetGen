@@ -1,0 +1,524 @@
+[
+  {
+    "device": "S5700LI_1",
+    "type": "VLAN配置",
+    "config": "vlan batch 100 to 103 200 to 201",
+    "des": "在S5700LI_1设备上批量创建VLAN 100至103和200至201，以区分不同的网络流量。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet 0/0/1\nport link-type trunk\nport trunk allow-pass vlan 100 to 103",
+    "des": "配置S5700LI_1的GigabitEthernet 0/0/1接口为trunk模式，并允许VLAN 100至103通过。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\ninterface GigabitEthernet 0/0/1\ndhcp snooping enable",
+    "des": "在S5700LI_1上启用DHCP Snooping功能，并在GigabitEthernet 0/0/1接口上启用DHCP Snooping，以增强网络安全。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "802.1x认证配置",
+    "config": "authentication-profile name dot1x_authen_profile\ndot1x-access-profile dot1x\naccess-domain abc force",
+    "des": "在S5720EI-Stack上配置名为dot1x_authen_profile的认证模板，绑定802.1x接入模板dot1x，并强制使用认证域abc。"
+  },
+  {
+    "device": "USG6650",
+    "type": "接口汇聚配置",
+    "config": "interface Eth-Trunk1\nportswitch\nport link-type trunk\nport trunk allow-pass vlan 20",
+    "des": "在USG6650的Eth-Trunk1接口上启用端口聚合，并设置为trunk模式允许VLAN 20通过，用于连接信任区域。"
+  },
+  {
+    "device": "S7700",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet1/0/0\nport link-type trunk\nport trunk allow-pass vlan 30",
+    "des": "配置S7700的GigabitEthernet1/0/0接口为trunk模式，并允许VLAN 30通过，用于与AC6605互连。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 1 virtual-ip 192.168.30.3\nvrrp vrid 1 priority 120",
+    "des": "在AC6605_1的VLANIF30接口上配置VRRP组1，虚拟IP地址为192.168.30.3，优先级为120，以实现高可用性。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 1 virtual-ip 192.168.30.3\nadmin-vrrp vrid 1",
+    "des": "在AC6605_2的VLANIF30接口上配置VRRP组1，虚拟IP地址为192.168.30.3，作为VRRP组的备份设备。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 1",
+    "des": "在S5700LI_1的GigabitEthernet 0/0/1接口上启用端口隔离，将端口归入组1，以隔离该组内的端口流量，防止广播风暴。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "VLAN配置",
+    "config": "vlan batch 200 to 201",
+    "des": "在S5700LI_2设备上批量创建VLAN 200至201，用于特定业务流量的隔离。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "访问控制列表配置",
+    "config": "acl name staff 3001\nrule 5 deny ip source 10.23.101.0 0.0.0.255 destination 10.100.2.0 0.0.0.255",
+    "des": "在S5720EI-Stack上定义名为staff的访问控制列表，其中规则5拒绝源地址为10.23.101.0/24到目的地址为10.100.2.0/24的IP流量，用于控制员工VLAN的访问权限。"
+  },
+  {
+    "device": "USG6650",
+    "type": "安全区域配置",
+    "config": "firewall zone trust\nset priority 85\nadd interface GigabitEthernet1/0/2\nadd interface GigabitEthernet1/0/3",
+    "des": "在USG6650防火墙上设置名为trust的安全区域，优先级为85，并将GigabitEthernet1/0/2和GigabitEthernet1/0/3接口添加到该区域，用于管理内网流量。"
+  },
+  {
+    "device": "S7700",
+    "type": "VLAN接口配置",
+    "config": "interface Vlanif30\nip address 192.168.30.4 255.255.255.0",
+    "des": "在S7700的VLANIF30接口上配置IP地址为192.168.30.4/24，用于与AC6605进行通信。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "WLAN安全配置",
+    "config": "security-profile name s1\nsecurity wpa-wpa2 psk pass-phrase a1234567 aes",
+    "des": "在AC6605_1上创建名为s1的安全模板，配置WPA2-PSK-AES加密方式和密码为a1234567，用于无线网络的安全保护。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "WLAN智能漫游配置",
+    "config": "rrm-profile name rrm\nsmart-roam roam-threshold check-snr check-rate\nsmart-roam roam-threshold snr 30\nsmart-roam roam-threshold rate 30",
+    "des": "在AC6605_2上创建名为rrm的RRM模板，启用智能漫游功能，并设置基于信噪比和信号速率的漫游触发门限分别为30dB和30%，以优化无线网络的用户体验。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP和HSB配置同步",
+    "config": "master-redundancy track-vrrp vrid 1 interface Vlanif30\nmaster-redundancy peer-ip ip-address 192.168.40.2 local-ip ip-address 192.168.40.1 psk H@123456",
+    "des": "在AC6605_1上配置VRRP跟踪和HSB（热备份）同步，通过Vlanif30接口的VRRP组1来跟踪状态，并将192.168.40.2作为对端IP地址，本地IP为192.168.40.1，使用预共享密钥H@123456来加密通信，实现AC6605_1和AC6605_2之间的配置同步。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "流量策略配置",
+    "config": "traffic-policy test inbound\ntraffic-policy test outbound",
+    "des": "在S5700LI_1的GigabitEthernet 0/0/1接口上应用名为'test'的流量策略，用于入站和出站流量的管理。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\ninterface Vlanif100\ndhcp select interface",
+    "des": "在S5720EI-Stack上启用DHCP服务，并在VLANIF100接口上应用，为接入的AP和客户端提供IP地址分配。"
+  },
+  {
+    "device": "USG6650",
+    "type": "安全区域和服务管理配置",
+    "config": "firewall zone trust\nservice-manage http permit\nservice-manage https permit",
+    "des": "在USG6650防火墙上配置信任区域，并允许通过HTTP和HTTPS服务管理，以便进行设备管理。"
+  },
+  {
+    "device": "S7700",
+    "type": "接口VLAN配置",
+    "config": "interface GigabitEthernet1/0/0\nport link-type trunk\nport trunk allow-pass vlan 30",
+    "des": "在S7700的GigabitEthernet1/0/0接口上设置trunk模式，并允许VLAN 30通过，用于核心交换机之间的链路聚合。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP和热备份配置",
+    "config": "vrrp vrid 1 virtual-ip 192.168.30.3\nhsb-group 0\nhsb enable",
+    "des": "在AC6605_1上配置VRRP虚拟路由器1，并设置虚拟IP地址为192.168.30.3，启用热备份组0，以提供高可用性。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "WLAN安全和SSID配置",
+    "config": "security-profile name s1\nssid-profile name Staff\nssid Staff_WIFI",
+    "des": "在AC6605_2上创建名为s1的安全模板，用于定义WLAN的加密和认证方法。同时，创建名为Staff的SSID模板，用于员工无线网络接入。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "端口镜像配置",
+    "config": "interface GigabitEthernet 0/0/1\nport mirror to GigabitEthernet 0/0/27 both",
+    "des": "在S5700LI_1的GigabitEthernet 0/0/1接口上启用端口镜像，将所有流量复制到GigabitEthernet 0/0/27接口，用于监控和管理。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "MAC认证配置",
+    "config": "mac-access-profile name m1\nauthentication-profile name mac_authen_profile\nmac-access-profile m1",
+    "des": "在S5720EI-Stack上创建名为m1的MAC接入模板，并绑定到名为mac_authen_profile的认证模板，用于MAC认证。"
+  },
+  {
+    "device": "USG6650",
+    "type": "静态路由配置",
+    "config": "ip route-static 10.23.0.0 255.255.0.0 192.168.20.1",
+    "des": "在USG6650防火墙上配置一条静态路由，用于将目的网络10.23.0.0/16的流量导向下一跳192.168.20.1。"
+  },
+  {
+    "device": "S7700",
+    "type": "VRRP组配置",
+    "config": "vrrp vrid 1 virtual-ip 192.168.30.3\nvrrp vrid 1 priority 100",
+    "des": "在S7700的VLANIF30接口上配置VRRP组1，设置虚拟IP地址为192.168.30.3，并赋予优先级100，以参与VRRP的故障转移。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "无线SSID配置",
+    "config": "ssid-profile name Staff\nssid Staff_WIFI\nssid-hide enable",
+    "des": "在AC6605_1上创建名为Staff的SSID模板，设置SSID为Staff_WIFI，并启用隐藏SSID功能，以供员工使用无线网络。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "智能漫游配置",
+    "config": "rrm-profile name rrm\nsmart-roam roam-threshold snr 30\nsmart-roam roam-threshold rate 30",
+    "des": "在AC6605_2上创建名为rrm的RRM模板，设置智能漫游的信噪比(SNR)和速率(Rate)触发阈值均为30，以优化无线客户端的连接质量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "员工VLAN ACL配置",
+    "config": "acl name staff 3001\nrule 5 deny ip source 10.23.101.0 0.0.0.255 destination 10.100.2.0 0.0.0.255\nrule 10 deny ip source 10.23.101.0 0.0.0.255 destination 10.100.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为员工VLANIF101创建名为staff的ACL，其中包含规则5和规则10，分别拒绝员工VLAN访问商铺系统服务器和POS机服务器的IP段。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "POS机VLAN ACL配置",
+    "config": "acl name POS 3002\nrule 5 permit ip source 10.23.102.0 0.0.0.255 destination 10.23.2.0 0.0.0.255\nrule 10 deny ip source 10.23.102.0 0.0.0.255 destination 0.0.0.0 0",
+    "des": "在S5720EI-Stack上为POS机VLANIF102创建名为POS的ACL，允许POS机VLAN访问商铺系统服务器的IP段，同时拒绝所有其他流量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "顾客VLAN ACL配置",
+    "config": "acl name guest 3003\nrule 5 deny ip source 10.23.103.0 0.0.0.255 destination 10.100.1.0 0.0.0.255\nrule 10 deny ip source 10.23.103.0 0.0.0.255 destination 10.100.2.0 0.0.0.255\nrule 15 deny ip source 10.23.103.0 0.0.0.255 destination 10.100.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为顾客VLANIF103创建名为guest的ACL，拒绝顾客VLAN访问办公服务器、商铺系统服务器和POS机服务器的IP段。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "有线PC VLAN ACL配置",
+    "config": "acl name PC 3004\nrule 5 deny ip source 10.23.200.0 0.0.0.255 destination 10.100.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为有线PC VLANIF200创建名为PC的ACL，拒绝有线PC VLAN访问POS机服务器的IP段。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "打印机VLAN ACL配置",
+    "config": "acl name printer 3005\nrule 5 permit ip source 10.23.201.0 0.0.0.255 destination 10.100.1.0 0.0.0.255\nrule 10 permit ip source 10.23.201.0 0.0.0.255 destination 10.100.2.0 0.0.0.255\nrule 15 deny ip source 10.23.201.0 0.0.0.255 destination 0.0.0.0 0",
+    "des": "在S5720EI-Stack上为打印机VLANIF201创建名为printer的ACL，允许打印机VLAN访问办公服务器和商铺系统服务器的IP段，同时拒绝所有其他流量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "ACL规则配置",
+    "config": "acl number 3001\nrule 0 permit ip source 192.168.100.0 0.0.0.255 destination 192.168.200.0 0.0.0.255",
+    "des": "允许从VLAN 100的IP地址（192.168.100.0/24）到VLAN 200的IP地址（192.168.200.0/24）的IP流量。"
+  },
+  {
+    "device": "USG6650",
+    "type": "NAT配置",
+    "config": "nat address-group 1\nstatic address 192.168.100.10",
+    "des": "在USG6650中定义一个NAT地址组，包含静态地址192.168.100.10，用于源NAT转换。"
+  },
+  {
+    "device": "S7700",
+    "type": "VLAN接口配置",
+    "config": "interface Vlanif30\nip address 192.168.30.1 255.255.255.0",
+    "des": "为S7700的VLAN 30分配IP地址192.168.30.1/24，作为该VLAN的默认网关。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "WLAN安全配置",
+    "config": "security-profile s1\nsecurity wpa3-psk cipher aes\npass-phrase mypassword",
+    "des": "在AC6605_1上创建一个WLAN安全配置文件s1，使用WPA3-PSK加密和AES密码，密码短语为'mypassword'。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "VRRP组配置",
+    "config": "vrrp vrid 1\nvirtual-ip 192.168.30.3\npriority 100",
+    "des": "在AC6605_2上配置VRRP组1，虚拟IP地址为192.168.30.3，优先级为100，用于故障转移。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "端口镜像配置",
+    "config": "interface GigabitEthernet 0/0/1\nport mirror to GigabitEthernet 0/0/24 both",
+    "des": "将GigabitEthernet 0/0/1接口上的所有流量复制到GigabitEthernet 0/0/24接口，用于监控。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "DHCP中继配置",
+    "config": "dhcp relay enable\ndhcp relay server-ip address 192.168.1.1",
+    "des": "启用S5720EI-Stack的DHCP中继功能，并将DHCP服务器IP地址设置为192.168.1.1。"
+  },
+  {
+    "device": "USG6650",
+    "type": "防火墙策略配置",
+    "config": "firewall packet-filter 3011\nrule 5 permit tcp",
+    "des": "在USG6650上创建一个包过滤规则3011，其中规则5允许所有TCP流量通过。"
+  },
+  {
+    "device": "S7700",
+    "type": "BGP配置",
+    "config": "router id 192.168.30.1\nbgp 100\npeer 192.168.30.2 as-number 100",
+    "des": "为S7700设置路由器ID为192.168.30.1，并配置BGP会话，与对等体192.168.30.2建立邻居关系。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "SSID配置",
+    "config": "ssid-profile Staff\nssid Staff_WIFI\nsecurity-profile s1",
+    "des": "在AC6605_1上为员工创建一个SSID配置，SSID名称为Staff_WIFI，并关联安全配置文件s1。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "动态VLAN分配",
+    "config": "wlan\ndynamic-vlan profile dvlan\nrule name Rule-1\nmatch attribute username\nvalue abc",
+    "des": "在AC6605_2上配置动态VLAN分配，根据用户名属性和值'abc'，将用户分配到特定的VLAN。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "端口安全配置",
+    "config": "interface GigabitEthernet 0/0/1\nport-security port-range 100 to 200\nport-security violation restrict-action",
+    "des": "在S5700LI_1的GigabitEthernet 0/0/1接口上设置端口安全，端口范围为100到200，并在违反安全策略时限制动作。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "QoS配置",
+    "config": "qos car 1 police cir 1000000 cbs 1000000 pbs 1000000 green pass yellow pass red drop",
+    "des": "在S5720EI-Stack上配置QoS策略，创建一个流量策略，确保至少1000000bps的流量，并且对超出的流量进行绿色放行、黄色放行和红色丢弃。"
+  },
+  {
+    "device": "USG6650",
+    "type": "VPN配置",
+    "config": "ipsec policy 1\ntransform-set TS1 esp aes 3des-md5-hmac",
+    "des": "在USG6650上配置IPsec安全策略1，使用ESP协议和AES加密、3DES-MD5-HMAC认证。"
+  },
+  {
+    "device": "S7700",
+    "type": "静态MAC配置",
+    "config": "mac-address-table static 00e0.fcff.1111 interface Vlanif30 vlan 30",
+    "des": "在S7700的VLANIF30接口上配置静态MAC地址表项，MAC地址为00e0.fcff.1111，属于VLAN 30。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "无线频谱分析配置",
+    "config": "wlan\nradio-2g-profile r2g\nradio-5g-profile r5g\nrrm-profile s1",
+    "des": "在AC6605_1上为2.4GHz和5GHz频段分别配置射频和RRM模板，以优化无线网络性能。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "无线客户端隔离配置",
+    "config": "vap-profile Staff\nclient-isolate enable",
+    "des": "在AC6605_2上为员工VAP配置客户端隔离，以防止连接到同一VAP的不同客户端之间的通信。"
+  },
+  {
+    "device": "S5700LI_1",
+    "type": "链路聚合配置",
+    "config": "interface Eth-Trunk 1\nport link-type trunk\nport trunk allow-pass vlan 100 to 200",
+    "des": "在S5700LI_1上配置链路聚合接口Eth-Trunk 1，允许VLAN 100到200通过。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "STP配置",
+    "config": "stp instance 1 priority 4096",
+    "des": "在S5720EI-Stack上为STP实例1设置优先级为4096，以减少成为根桥的可能性。"
+  },
+  {
+    "device": "USG6650",
+    "type": "带宽限制配置",
+    "config": "traffic-control policer 1\ncir 128000 cbs 8192 pbs 8192 green pass",
+    "des": "在USG6650上配置流量控制策略，限制流量的承诺信息速率（CIR）为128000bps，峰值信息速率（PIR）为8192bps，并允许绿色标记的流量通过。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "VLAN配置",
+    "config": "vlan batch 300 to 303",
+    "des": "在S5700LI_2设备上批量创建VLAN 300至303，用于新的网络流量隔离。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet 0/0/2\nport link-type trunk\nport trunk allow-pass vlan 300 to 303",
+    "des": "配置S5700LI_2的GigabitEthernet 0/0/2接口为trunk模式，并允许VLAN 300至303通过。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\ninterface GigabitEthernet 0/0/2\ndhcp snooping enable",
+    "des": "在S5700LI_2上启用DHCP Snooping功能，并在GigabitEthernet 0/0/2接口上启用DHCP Snooping。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "802.1x认证配置",
+    "config": "authentication-profile name dot1x_authen_profile_2\ndot1x-access-profile dot1x_2\naccess-domain xyz force",
+    "des": "在S5720EI-Stack上配置名为dot1x_authen_profile_2的认证模板，绑定802.1x接入模板dot1x_2，并强制使用认证域xyz。"
+  },
+  {
+    "device": "USG6650",
+    "type": "接口汇聚配置",
+    "config": "interface Eth-Trunk2\nportswitch\nport link-type trunk\nport trunk allow-pass vlan 40",
+    "des": "在USG6650的Eth-Trunk2接口上启用端口聚合，并设置为trunk模式允许VLAN 40通过。"
+  },
+  {
+    "device": "S7700",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet1/0/1\nport link-type trunk\nport trunk allow-pass vlan 40",
+    "des": "配置S7700的GigabitEthernet1/0/1接口为trunk模式，并允许VLAN 40通过。"
+  },
+  {
+    "device": "AC6605_3",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.40.4\nvrrp vrid 2 priority 100",
+    "des": "在AC6605_3的VLANIF40接口上配置VRRP组2，虚拟IP地址为192.168.40.4，优先级为100。"
+  },
+  {
+    "device": "AC6605_4",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.40.4\nadmin-vrrp vrid 2",
+    "des": "在AC6605_4的VLANIF40接口上配置VRRP组2，虚拟IP地址为192.168.40.4，作为VRRP组的备份设备。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 2",
+    "des": "在S5700LI_2的GigabitEthernet 0/0/2接口上启用端口隔离，将端口归入组2。"
+  },
+  {
+    "device": "S5700LI_3",
+    "type": "VLAN配置",
+    "config": "vlan batch 400 to 403",
+    "des": "在S5700LI_3设备上批量创建VLAN 400至403，用于隔离特定的网络流量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "访问控制列表配置",
+    "config": "acl name management 3006\nrule 5 deny ip source 10.24.101.0 0.0.0.255 destination 10.100.4.0 0.0.0.255",
+    "des": "在S5720EI-Stack上定义名为management的访问控制列表，规则5拒绝源地址为10.24.101.0/24到目的地址为10.100.4.0/24的IP流量。"
+  },
+  {
+    "device": "USG6650",
+    "type": "安全区域配置",
+    "config": "firewall zone dmz\nset priority 90\nadd interface GigabitEthernet1/0/4\nadd interface GigabitEthernet1/0/5",
+    "des": "在USG6650防火墙上设置名为dmz的安全区域，优先级为90，并将GigabitEthernet1/0/4和GigabitEthernet1/0/5接口添加到该区域。"
+  },
+  {
+    "device": "S7700",
+    "type": "VLAN接口配置",
+    "config": "interface Vlanif40\nip address 192.168.40.5 255.255.255.0",
+    "des": "在S7700的VLANIF40接口上配置IP地址为192.168.40.5/24。"
+  },
+  {
+    "device": "AC6605_3",
+    "type": "WLAN安全配置",
+    "config": "security-profile name s2\nsecurity wpa-wpa2 psk pass-phrase b1234567 aes",
+    "des": "在AC6605_3上创建名为s2的安全模板，配置WPA2-PSK-AES加密方式和密码为b1234567。"
+  },
+  {
+    "device": "AC6605_4",
+    "type": "WLAN智能漫游配置",
+    "config": "rrm-profile name rrm2\nsmart-roam roam-threshold check-snr check-rate\nsmart-roam roam-threshold snr 25\nsmart-roam roam-threshold rate 25",
+    "des": "在AC6605_4上创建名为rrm2的RRM模板，启用智能漫游功能，并设置基于信噪比和信号速率的漫游触发门限分别为25dB和25%。"
+  },
+  {
+    "device": "AC6605_3",
+    "type": "VRRP和HSB配置同步",
+    "config": "master-redundancy track-vrrp vrid 2 interface Vlanif40\nmaster-redundancy peer-ip ip-address 192.168.40.3 local-ip ip-address 192.168.40.2 psk X@654321",
+    "des": "在AC6605_3上配置VRRP跟踪和HSB同步，通过Vlanif40接口的VRRP组2来跟踪状态，并将192.168.40.3作为对端IP地址，本地IP为192.168.40.2，使用预共享密钥X@654321。"
+  },
+  {
+    "device": "S5700LI_2",
+    "type": "流量策略配置",
+    "config": "traffic-policy test2 inbound\ntraffic-policy test2 outbound",
+    "des": "在S5700LI_2的GigabitEthernet 0/0/2接口上应用名为'test2'的流量策略，用于入站和出站流量的管理。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\ninterface Vlanif300\ndhcp select interface",
+    "des": "在S5720EI-Stack上启用DHCP服务，并在VLANIF300接口上应用，为接入的AP和客户端提供IP地址分配。"
+  },
+  {
+    "device": "USG6650",
+    "type": "安全区域和服务管理配置",
+    "config": "firewall zone untrust\nservice-manage ssh permit\nservice-manage rdp permit",
+    "des": "在USG6650防火墙上配置不信任区域，并允许通过SSH和RDP服务管理。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "安全区域配置",
+    "config": "firewall zone untrust\nset priority 100\nadd interface GigabitEthernet0/0/1\nadd interface GigabitEthernet0/0/2",
+    "des": "在S5720EI-Stack防火墙上设置名为untrust的安全区域，优先级为100，并将GigabitEthernet0/0/1和GigabitEthernet0/0/2接口添加到该区域。"
+  },
+  {
+    "device": "S7700",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.40.1\nvrrp vrid 2 priority 90",
+    "des": "在S7700的VLANIF40接口上配置VRRP组2，设置虚拟IP地址为192.168.40.1，并赋予优先级90。"
+  },
+  {
+    "device": "USG6650",
+    "type": "NAT配置",
+    "config": "nat address-group 2\nstatic address 192.168.100.11",
+    "des": "在USG6650中定义一个NAT地址组，包含静态地址192.168.100.11，用于源NAT转换。"
+  },
+  {
+    "device": "AC6605_3",
+    "type": "WLAN安全配置",
+    "config": "security-profile name s3\nsecurity wpa3-personal\npass-phrase c1234567",
+    "des": "在AC6605_3上创建名为s3的安全模板，配置WPA3-Personal加密方式和密码为c1234567。"
+  },
+  {
+    "device": "AC6605_4",
+    "type": "WLAN智能漫游配置",
+    "config": "rrm-profile name rrm3\nsmart-roam roam-threshold snr 35\nsmart-roam roam-threshold rate 35",
+    "des": "在AC6605_4上创建名为rrm3的RRM模板，启用智能漫游功能，并设置基于信噪比和信号速率的漫游触发门限分别为35dB和35%。"
+  },
+  {
+    "device": "S5700LI_3",
+    "type": "端口镜像配置",
+    "config": "interface GigabitEthernet 0/0/1\nport mirror to GigabitEthernet 0/0/28 both",
+    "des": "在S5700LI_3的GigabitEthernet 0/0/1接口上启用端口镜像，将所有流量复制到GigabitEthernet 0/0/28接口，用于监控和管理。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "MAC认证配置",
+    "config": "mac-access-profile name m2\nauthentication-profile name mac_authen_profile_2\nmac-access-profile m2",
+    "des": "在S5720EI-Stack上创建名为m2的MAC接入模板，并绑定到名为mac_authen_profile_2的认证模板，用于MAC认证。"
+  },
+  {
+    "device": "USG6650",
+    "type": "静态路由配置",
+    "config": "ip route-static 10.24.0.0 255.255.0.0 192.168.20.2",
+    "des": "在USG6650防火墙上配置一条静态路由，用于将目的网络10.24.0.0/16的流量导向下一跳192.168.20.2。"
+  },
+  {
+    "device": "S7700",
+    "type": "VRRP组配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.40.2\nvrrp vrid 2 priority 95",
+    "des": "在S7700的VLANIF40接口上配置VRRP组2，设置虚拟IP地址为192.168.40.2，并赋予优先级95，以参与VRRP的故障转移。"
+  },
+  {
+    "device": "AC6605_3",
+    "type": "无线SSID配置",
+    "config": "ssid-profile name Management\nssid Management_WIFI\nssid-hide enable",
+    "des": "在AC6605_3上创建名为Management的SSID模板，设置SSID为Management_WIFI，并启用隐藏SSID功能，以供管理人员使用无线网络。"
+  },
+  {
+    "device": "AC6605_4",
+    "type": "智能漫游配置",
+    "config": "rrm-profile name rrm4\nsmart-roam roam-threshold snr 40\nsmart-roam roam-threshold rate 40",
+    "des": "在AC6605_4上创建名为rrm4的RRM模板，设置智能漫游的信噪比(SNR)和速率(Rate)触发阈值均为40，以优化无线客户端的连接质量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "员工VLAN ACL配置",
+    "config": "acl name staff 3007\nrule 5 deny ip source 10.25.101.0 0.0.0.255 destination 10.101.2.0 0.0.0.255\nrule 10 deny ip source 10.25.101.0 0.0.0.255 destination 10.101.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为员工VLANIF101创建名为staff的ACL，其中包含规则5和规则10，分别拒绝员工VLAN访问商铺系统服务器和POS机服务器的IP段。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "POS机VLAN ACL配置",
+    "config": "acl name POS 3008\nrule 5 permit ip source 10.25.102.0 0.0.0.255 destination 10.25.2.0 0.0.0.255\nrule 10 deny ip source 10.25.102.0 0.0.0.255 destination 0.0.0.0 0",
+    "des": "在S5720EI-Stack上为POS机VLANIF102创建名为POS的ACL，允许POS机VLAN访问商铺系统服务器的IP段，同时拒绝所有其他流量。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "顾客VLAN ACL配置",
+    "config": "acl name guest 3009\nrule 5 deny ip source 10.25.103.0 0.0.0.255 destination 10.101.1.0 0.0.0.255\nrule 10 deny ip source 10.25.103.0 0.0.0.255 destination 10.101.2.0 0.0.0.255\nrule 15 deny ip source 10.25.103.0 0.0.0.255 destination 10.101.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为顾客VLANIF103创建名为guest的ACL，拒绝顾客VLAN访问办公服务器、商铺系统服务器和POS机服务器的IP段。"
+  },
+  {
+    "device": "S5720EI-Stack",
+    "type": "有线PC VLAN ACL配置",
+    "config": "acl name PC 3010\nrule 5 deny ip source 10.25.200.0 0.0.0.255 destination 10.101.3.0 0.0.0.255",
+    "des": "在S5720EI-Stack上为有线PC VLANIF200创建名为PC的ACL，拒绝有线PC VLAN访问POS机服务器的IP段。"
+  }
+]

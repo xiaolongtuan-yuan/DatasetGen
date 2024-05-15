@@ -1,0 +1,611 @@
+[
+  {
+    "type": "VLAN配置",
+    "config": "vlan batch 20 30 100 to 104",
+    "des": "这条命令在多个交换机上使用，用于批量创建VLAN 20、30以及从VLAN 100到104。"
+  },
+  {
+    "type": "接口IP配置",
+    "config": "interface Vlanif20\nip address 10.20.0.4 255.255.255.0",
+    "des": "配置设备上的VLAN 20接口（Vlanif20）并分配IP地址10.20.0.4，子网掩码为255.255.255.0。"
+  },
+  {
+    "type": "有线用户认证方案",
+    "config": "authentication-profile name hospital",
+    "des": "在多个接口上应用名为“hospital”的认证方案，这可能包含认证方法、服务器等信息。"
+  },
+  {
+    "type": "智能漫游和负载均衡",
+    "config": "wlan traffic-profile name hospital\nrate-limit client up 10240\nrate-limit client down 10240\nuser-isolate all",
+    "des": "为无线局域网（WLAN）配置名为“hospital”的流量模板，限制客户端上传和下载速率均为10240 Kbps，并启用用户隔离。"
+  },
+  {
+    "type": "Portal认证配置",
+    "config": "portal-access-profile name hospital\nweb-auth-server hospital direct",
+    "des": "设置名为“hospital”的Portal访问配置文件，并指定使用直接连接的Portal认证服务器。"
+  },
+  {
+    "type": "用户级限速和端口防攻击",
+    "config": "cpu-defend host-car enable\ndisplay auto-port-defend configuration",
+    "des": "启用基于CPU的防御机制来保护主机，并展示自动端口防御的配置信息。"
+  },
+  {
+    "type": "VRRP热备份配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\nvrrp vrid 1 priority 120",
+    "des": "在VLAN接口上配置虚拟路由器冗余协议（VRRP），设置虚拟IP地址为172.16.100.1，优先级为120，确保网络中的设备能够进行故障转移。"
+  },
+  {
+    "type": "HSB热备配置",
+    "config": "hsb-service 0\nservice-ip-port local-ip 172.16.30.1 peer-ip 172.16.30.2 local-data-port 10241",
+    "des": "配置热备份（HSB）服务，设置本地IP地址为172.16.30.1，对端IP地址为172.16.30.2，数据端口为10241。"
+  },
+  {
+    "type": "ACL策略配置",
+    "config": "acl name server-rule 3001\nrule 5 deny ip source 172.16.103.0 0.0.0.255 destination 10.100.2.0 0.0.0.255",
+    "des": "创建名为“server-rule”的访问控制列表（ACL），并设置规则5以拒绝从VLAN 103（IP段172.16.103.0/24）到办公服务器（IP段10.100.2.0/24）的IP流量。"
+  },
+  {
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\ninterface Vlanif101\ndhcp select interface",
+    "des": "启用DHCP服务，并在VLAN 101的接口上应用DHCP，允许接口通过DHCP自动配置IP地址。"
+  },
+  {
+    "type": "无线业务配置",
+    "config": "ssid-profile name hospital_employee\nssid hospital_employee\nvap-profile name hospital_employee\nservice-vlan vlan-id 102\nssid-profile hospital_employee",
+    "des": "配置名为“hospital_employee”的SSID和虚拟接入点（VAP）配置文件，将其与服务VLAN ID 102关联。"
+  },
+  {
+    "device": "CSS",
+    "type": "OSPF配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 10.20.0.0 0.0.0.255\n network 172.16.101.0 0.0.0.255\n network 172.16.102.0 0.0.0.255\n network 172.16.103.0 0.0.0.255\n network 172.16.104.0 0.0.0.255",
+    "des": "在核心交换机CSS上配置OSPF协议，宣告多个网络，包括管理网络和不同业务VLAN的网络段。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 2 virtual-ip 10.20.0.1\n vrrp vrid 2 priority 120\n vrrp vrid 2 preempt-mode timer delay 1200",
+    "des": "在ACU2_1上配置VRRP组2，使用虚拟IP地址10.20.0.1，优先级设置为120，并设置了抢占延时为1200秒。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "堆叠配置",
+    "config": "# 为两台S5720-EI分别安装堆叠卡并连接堆叠线缆，设备自动组建堆叠。",
+    "des": "在门诊大楼的汇聚交换机上通过安装堆叠卡和连接堆叠线缆来自动组建堆叠，增强设备的冗余和负载分担能力。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp enable\n dhcp snooping enable\n vlan 101\n dhcp snooping enable",
+    "des": "在接入交换机S5720LI_1上启用DHCP服务和DHCP Snooping，特别在VLAN 101上启用DHCP Snooping以增强安全性。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet0/0/1\n port link-type hybrid\n port hybrid pvid vlan 100\n port hybrid tagged vlan 102 to 104\n port hybrid untagged vlan 100\n port-isolate enable group 1",
+    "des": "配置S5720LI_1的GigabitEthernet0/0/1接口，设置为hybrid类型，并配置PVID、tagged和untagged VLAN，启用端口隔离。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "WLAN配置",
+    "config": "wlan\n traffic-profile name hospital\n rate-limit client up 10240\n rate-limit client down 10240\n user-isolate all\n security-profile name hospital_employee\n ssid-profile name hospital_employee\n ssid hospital_employee",
+    "des": "在ACU2_1上配置无线局域网，设置流量模板限制客户端速率，启用用户隔离，并为员工配置安全设置和SSID。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "接口管理IP配置",
+    "config": "interface MEth0/0/1\n ip address 192.168.0.5 24 255.255.255.0",
+    "des": "为S5720EI-iStack_1的堆叠系统接口MEth0/0/1配置管理IP地址192.168.0.5，子网掩码为255.255.255.0。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "Eth-Trunk接口配置",
+    "config": "interface Eth-Trunk5\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 100 to 104\n mode lacp",
+    "des": "在S5720LI_1上配置Eth-Trunk5接口，设置链路类型为trunk，允许VLAN 100至104通过，并启用LACP模式。"
+  },
+  {
+    "device": "S5720LI_2",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet0/0/1\n port-isolate enable group 1",
+    "des": "在S5720LI_2的GigabitEthernet0/0/1接口上启用端口隔离，将端口归入组1，以增强网络安全。"
+  },
+  {
+    "device": "S5720EI-iStack_2",
+    "type": "Eth-Trunk接口配置",
+    "config": "interface Eth-Trunk2\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 100 to 104\n mode lacp",
+    "des": "在S5720EI-iStack_2上配置Eth-Trunk2接口，设置链路类型为trunk，去除默认VLAN 1的允许通过，并允许VLAN 100至104通过，同时启用LACP模式。"
+  },
+  {
+    "device": "S5720LI_3",
+    "type": "端口默认VLAN配置",
+    "config": "interface GigabitEthernet0/0/3\n port default vlan 101",
+    "des": "在S5720LI_3的GigabitEthernet0/0/3接口上配置默认VLAN为101，用于端口接入的流量。"
+  },
+  {
+    "device": "ACU2_2",
+    "type": "VRRP和DHCP配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 100\n dhcp select interface",
+    "des": "在ACU2_2上配置VRRP组1，使用虚拟IP地址172.16.100.1，优先级设置为100，并且通过接口选择DHCP配置，确保高可用性。"
+  },
+  {
+    "device": "S5720EI-iStack_3",
+    "type": "堆叠接口配置",
+    "config": "interface MEth0/0/1\n ip address 192.168.0.7 24 255.255.255.0",
+    "des": "为S5720EI-iStack_3的堆叠系统接口MEth0/0/1配置管理IP地址192.168.0.7，子网掩码为255.255.255.0。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "静态路由配置",
+    "config": "ip route-static 172.16.30.0 255.255.255.0 10.20.0.1\nip route-static 172.16.100.0 255.255.255.0 10.20.0.1",
+    "des": "在ACU2_1上配置静态路由，确保网络中172.16.30.0/24和172.16.100.0/24的流量通过10.20.0.1进行路由。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "VTY线路配置",
+    "config": "user-interface vty 0 4\n authentication-mode aaa\n user privilege level 15\n protocol inbound all",
+    "des": "为ACU2_1上的VTY线路配置AAA认证，允许最高权限级别15的用户通过所有协议进行访问。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "堆叠接口描述",
+    "config": "interface Eth-Trunk2\n port description switch",
+    "des": "为S5720EI-iStack_1上的Eth-Trunk2接口设置描述为'switch'，以标识链路聚合成员接口。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "DHCP Snooping信任端口配置",
+    "config": "interface Eth-Trunk5\n dhcp snooping trusted",
+    "des": "在S5720LI_1的Eth-Trunk5接口上启用DHCP Snooping，并将其设置为信任端口，允许DHCP流量不受限制地通过。"
+  },
+  {
+    "device": "S5720LI_2",
+    "type": "接口链路类型配置",
+    "config": "interface GigabitEthernet0/0/3\n port link-type access\n port default vlan 101",
+    "des": "在S5720LI_2的GigabitEthernet0/0/3接口上设置链路类型为access，并将其默认VLAN设置为101。"
+  },
+  {
+    "device": "ACU2_2",
+    "type": "VRRP和DHCP配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 100\n dhcp select interface",
+    "des": "在ACU2_2上配置VRRP组1，使用虚拟IP地址172.16.100.1和优先级100，同时选择接口以进行DHCP配置。"
+  },
+  {
+    "device": "ACU2_2",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif20\n ip address 10.20.0.3 255.255.255.0",
+    "des": "为ACU2_2的Vlanif20接口分配IP地址10.20.0.3，子网掩码为255.255.255.0。"
+  },
+  {
+    "device": "S5720EI-iStack_3",
+    "type": "堆叠接口配置",
+    "config": "interface Eth-Trunk4\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 100 to 104\n mode lacp",
+    "des": "在S5720EI-iStack_3的Eth-Trunk4接口上配置链路聚合，允许VLAN 100至104通过，并启用LACP模式。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet0/0/1\n port link-type hybrid\n port hybrid pvid vlan 100\n port hybrid untagged vlan 100\n port hybrid tagged vlan 102 to 104\n port-isolate enable group 1",
+    "des": "为S5720LI_1的GigabitEthernet0/0/1接口配置混合端口模式，设置PVID为VLAN 100，并允许VLAN 100为未标记VLAN，同时允许VLAN 102至104通过标记VLAN，启用端口隔离以增强安全性。"
+  },
+  {
+    "device": "S5720LI_2",
+    "type": "接口链路类型配置",
+    "config": "interface GigabitEthernet0/0/3\n port link-type access\n port default vlan 101",
+    "des": "在S5720LI_2的GigabitEthernet0/0/3接口上设置链路类型为access，并将其默认VLAN设置为101，通常用于连接终端设备。"
+  },
+  {
+    "device": "S5720LI_3",
+    "type": "接口汇聚配置",
+    "config": "interface GigabitEthernet0/0/11\n eth-trunk 6\n interface GigabitEthernet0/0/12\n eth-trunk 6",
+    "des": "在S5720LI_3上，将GigabitEthernet0/0/11和GigabitEthernet0/0/12接口添加到以太网链路聚合组6，以增加吞吐量并提供冗余。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "无线接入点配置",
+    "config": "ap-group name AP_group_office\n radio 1\n radio-5g-profile 5G_hospital\n vap-profile hospital_employee wlan 1",
+    "des": "在ACU2_1上配置AP_group_office无线接入点组，指定5G无线电使用5G_hospital配置文件，并将hospital_employee虚拟接入点（VAP）与WLAN 1关联。"
+  },
+  {
+    "device": "ACU2_2",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif30\n ip address 172.16.30.2 255.255.255.0",
+    "des": "为ACU2_2的Vlanif30接口分配IP地址172.16.30.2，子网掩码为255.255.255.0，用于特定VLAN的网络接口。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "用户界面认证配置",
+    "config": "user-interface vty 0 4\n authentication-mode aaa\n user privilege level 15",
+    "des": "在S5720EI-iStack_1上为远程登录会话配置AAA认证，并设置用户权限等级为15，允许管理员级别的访问。"
+  },
+  {
+    "device": "S5720EI-iStack_2",
+    "type": "接口汇聚配置",
+    "config": "interface Eth-Trunk2\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 100 to 104\n mode lacp",
+    "des": "在S5720EI-iStack_2的Eth-Trunk2接口上配置LACP模式的链路聚合，允许VLAN 100至104通过，不包括VLAN 1。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "接口描述配置",
+    "config": "interface GigabitEthernet0/0/3\n port description desktop",
+    "des": "为S5720LI_1的GigabitEthernet0/0/3接口设置描述为'desktop'，以标识该端口连接的设备类型。"
+  },
+  {
+    "device": "S5720LI_2",
+    "type": "接口链路类型与默认VLAN配置",
+    "config": "interface GigabitEthernet0/0/3\n port link-type access\n port default vlan 101",
+    "des": "在S5720LI_2的GigabitEthernet0/0/3接口上设置链路类型为access，并指定默认VLAN为101。"
+  },
+  {
+    "device": "S5720LI_3",
+    "type": "接口汇聚配置",
+    "config": "interface GigabitEthernet0/0/11\n eth-trunk 6\n interface GigabitEthernet0/0/12\n eth-trunk 6",
+    "des": "在S5720LI_3上，将GigabitEthernet0/0/11和GigabitEthernet0/0/12接口添加到Eth-Trunk 6，以提供链路冗余和负载分担。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "无线接入点配置",
+    "config": "ap-group name AP_group_office\n radio 1\n radio-5g-profile 5G_hospital\n vap-profile hospital_employee wlan 1",
+    "des": "在ACU2_1上为AP_group_office配置5G无线电，应用5G_hospital无线电配置文件，并将hospital_employee虚拟接入点（VAP）关联到WLAN 1。"
+  },
+  {
+    "device": "ACU2_2",
+    "type": "接口VRRP配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 100",
+    "des": "在ACU2_2上为VRRP组1配置虚拟IP地址172.16.100.1，并设置优先级为100，以确保网络中的设备能够在故障时进行无缝切换。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "用户界面认证配置",
+    "config": "user-interface vty 0 4\n authentication-mode aaa\n user privilege level 15",
+    "des": "在S5720EI-iStack_1上为VTY接口配置AAA认证，并设置用户权限等级为15，允许管理员访问。"
+  },
+  {
+    "device": "S5720EI-iStack_2",
+    "type": "接口汇聚协议配置",
+    "config": "interface Eth-Trunk2\n mode lacp",
+    "des": "在S5720EI-iStack_2的Eth-Trunk2接口上启用LACP协议，以便自动进行链路聚合。"
+  },
+  {
+    "type": "VLAN配置",
+    "config": "vlan batch 200 300 250 to 254",
+    "des": "这条命令用于批量创建VLAN 200、300以及从VLAN 250到254。"
+  },
+  {
+    "type": "接口IP配置",
+    "config": "interface Vlanif200\nip address 192.168.200.4 255.255.255.0",
+    "des": "配置设备上的VLAN 200接口（Vlanif200）并分配IP地址192.168.200.4，子网掩码为255.255.255.0。"
+  },
+  {
+    "type": "有线用户认证方案",
+    "config": "authentication-profile name enterprise",
+    "des": "在多个接口上应用名为“enterprise”的认证方案，这可能包含认证方法、服务器等信息。"
+  },
+  {
+    "type": "智能漫游和负载均衡",
+    "config": "wlan traffic-profile name enterprise\nrate-limit client up 5120\nrate-limit client down 5120\nuser-isolate all",
+    "des": "为无线局域网（WLAN）配置名为“enterprise”的流量模板，限制客户端上传和下载速率均为5120 Kbps，并启用用户隔离。"
+  },
+  {
+    "type": "Portal认证配置",
+    "config": "portal-access-profile name enterprise\nweb-auth-server enterprise direct",
+    "des": "设置名为“enterprise”的Portal访问配置文件，并指定使用直接连接的Portal认证服务器。"
+  },
+  {
+    "type": "用户级限速和端口防攻击",
+    "config": "cpu-defend host-car enable\ndisplay auto-port-defend configuration",
+    "des": "启用基于CPU的防御机制来保护主机，并展示自动端口防御的配置信息。"
+  },
+  {
+    "type": "VRRP热备份配置",
+    "config": "vrrp vrid 10 virtual-ip 192.168.100.1\nvrrp vrid 10 priority 150",
+    "des": "在VLAN接口上配置虚拟路由器冗余协议（VRRP），设置虚拟IP地址为192.168.100.1，优先级为150，确保网络中的设备能够进行故障转移。"
+  },
+  {
+    "type": "HSB热备配置",
+    "config": "hsb-service 1\nservice-ip-port local-ip 192.168.30.1 peer-ip 192.168.30.2 local-data-port 20441",
+    "des": "配置热备份（HSB）服务，设置本地IP地址为192.168.30.1，对端IP地址为192.168.30.2，数据端口为20441。"
+  },
+  {
+    "type": "ACL策略配置",
+    "config": "acl name client-rule 4001\nrule 10 deny ip source 192.168.103.0 0.0.0.255 destination 10.100.3.0 0.0.0.255",
+    "des": "创建名为“client-rule”的访问控制列表（ACL），并设置规则10以拒绝从VLAN 103（IP段192.168.103.0/24）到办公服务器（IP段10.100.3.0/24）的IP流量。"
+  },
+  {
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\ninterface Vlanif201\ndhcp select interface",
+    "des": "启用DHCP服务，并在VLAN 201的接口上应用DHCP，允许接口通过DHCP自动配置IP地址。"
+  },
+  {
+    "type": "无线业务配置",
+    "config": "ssid-profile name enterprise_guest\nssid enterprise_guest\nvap-profile name enterprise_guest\nservice-vlan vlan-id 202\nssid-profile enterprise_guest",
+    "des": "配置名为“enterprise_guest”的SSID和虚拟接入点（VAP）配置文件，将其与服务VLAN ID 202关联。"
+  },
+  {
+    "device": "CSS",
+    "type": "OSPF配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 192.168.200.0 0.0.0.255\n network 10.20.200.0 0.0.0.255\n network 10.20.201.0 0.0.0.255",
+    "des": "在核心交换机CSS上配置OSPF协议，宣告多个网络，包括管理网络和不同业务VLAN的网络段。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 3 virtual-ip 10.20.200.1\n vrrp vrid 3 priority 100\n vrrp vrid 3 preempt-mode timer delay 900",
+    "des": "在ACU2_1上配置VRRP组3，使用虚拟IP地址10.20.200.1，优先级设置为100，并设置了抢占延时为900秒。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "堆叠配置",
+    "config": "# 为两台S5720-EI分别安装堆叠卡并连接堆叠线缆，设备自动组建堆叠。",
+    "des": "在门诊大楼的汇聚交换机上通过安装堆叠卡和连接堆叠线缆来自动组建堆叠，增强设备的冗余和负载分担能力。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp enable\n dhcp snooping enable\n vlan 201\n dhcp snooping enable",
+    "des": "在接入交换机S5720LI_1上启用DHCP服务和DHCP Snooping，特别在VLAN 201上启用DHCP Snooping以增强安全性。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "接口配置",
+    "config": "interface GigabitEthernet0/0/2\n port link-type hybrid\n port hybrid pvid vlan 200\n port hybrid tagged vlan 202 to 204\n port hybrid untagged vlan 200\n port-isolate enable group 2",
+    "des": "配置S5720LI_1的GigabitEthernet0/0/2接口，设置为hybrid类型，并配置PVID、tagged和untagged VLAN，启用端口隔离。"
+  },
+  {
+    "device": "ACU2_1",
+    "type": "WLAN配置",
+    "config": "wlan\n traffic-profile name enterprise\n rate-limit client up 5120\n rate-limit client down 5120\n user-isolate all\n security-profile name enterprise_guest\n ssid-profile name enterprise_guest\n ssid enterprise_guest",
+    "des": "在ACU2_1上配置无线局域网，设置流量模板限制客户端速率，启用用户隔离，并为企业访客配置安全设置和SSID。"
+  },
+  {
+    "device": "S5720EI-iStack_1",
+    "type": "接口管理IP配置",
+    "config": "interface MEth0/0/2\n ip address 192.168.1.5 24 255.255.255.0",
+    "des": "为S5720EI-iStack_1的堆叠系统接口MEth0/0/2配置管理IP地址192.168.1.5，子网掩码为255.255.255.0。"
+  },
+  {
+    "device": "S5720LI_1",
+    "type": "Eth-Trunk接口配置",
+    "config": "interface Eth-Trunk6\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 200 to 204\n mode lacp",
+    "des": "在S5720LI_1上配置Eth-Trunk6接口，设置链路类型为trunk，允许VLAN 200至204通过，并启用LACP模式。"
+  },
+  {
+    "device": "S5720LI_2",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet0/0/2\n port-isolate enable group 2",
+    "des": "在S5720LI_2的GigabitEthernet0/0/2接口上启用端口隔离，将端口归入"
+  },
+  {
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet0/0/2\n port-isolate enable group 2",
+    "des": "在交换机的GigabitEthernet0/0/2接口上启用端口隔离，将端口归入组2，以增强网络安全。"
+  },
+  {
+    "type": "VRRP和DHCP配置",
+    "config": "vrrp vrid 3 virtual-ip 192.168.200.1\n vrrp vrid 3 priority 90\n dhcp select interface",
+    "des": "在网络设备上配置VRRP组3，使用虚拟IP地址192.168.200.1，优先级设置为90，并通过接口选择DHCP配置，确保高可用性。"
+  },
+  {
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif40\n ip address 10.20.40.1 255.255.255.0",
+    "des": "为设备的Vlanif40接口分配IP地址10.20.40.1，子网掩码为255.255.255.0。"
+  },
+  {
+    "type": "堆叠接口配置",
+    "config": "interface MEth0/0/3\n ip address 192.168.2.5 24 255.255.255.0",
+    "des": "为堆叠系统接口MEth0/0/3配置管理IP地址192.168.2.5，子网掩码为255.255.255.0。"
+  },
+  {
+    "type": "Eth-Trunk接口配置",
+    "config": "interface Eth-Trunk7\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 300 to 304\n mode lacp",
+    "des": "配置Eth-Trunk7接口，设置链路类型为trunk，去除默认VLAN 1的允许通过，并允许VLAN 300至304通过，同时启用LACP模式。"
+  },
+  {
+    "type": "端口默认VLAN配置",
+    "config": "interface GigabitEthernet0/0/4\n port default vlan 301",
+    "des": "在交换机的GigabitEthernet0/0/4接口上配置默认VLAN为301，用于端口接入的流量。"
+  },
+  {
+    "type": "静态路由配置",
+    "config": "ip route-static 192.168.40.0 255.255.255.0 10.20.40.1\n ip route-static 192.168.50.0 255.255.255.0 10.20.40.1",
+    "des": "配置静态路由，确保网络中192.168.40.0/24和192.168.50.0/24的流量通过10.20.40.1进行路由。"
+  },
+  {
+    "type": "VTY线路配置",
+    "config": "user-interface vty 5 9\n authentication-mode aaa\n user privilege level 15\n protocol inbound all",
+    "des": "为VTY线路配置AAA认证，允许最高权限级别15的用户通过所有协议进行访问。"
+  },
+  {
+    "type": "堆叠接口描述",
+    "config": "interface Eth-Trunk3\n port description router",
+    "des": "为Eth-Trunk3接口设置描述为'router'，以标识链路聚合成员接口。"
+  },
+  {
+    "type": "DHCP Snooping信任端口配置",
+    "config": "interface Eth-Trunk6\n dhcp snooping trusted",
+    "des": "在Eth-Trunk6接口上启用DHCP Snooping，并将其设置为信任端口，允许DHCP流量不受限制地通过。"
+  },
+  {
+    "type": "接口链路类型配置",
+    "config": "interface GigabitEthernet0/0/4\n port link-type access\n port default vlan 201",
+    "des": "在GigabitEthernet0/0/4接口上设置链路类型为access，并将其默认VLAN设置为201。"
+  },
+  {
+    "type": "接口汇聚配置",
+    "config": "interface GigabitEthernet0/0/13\n eth-trunk 7\n interface GigabitEthernet0/0/14\n eth-trunk 7",
+    "des": "将GigabitEthernet0/0/13和GigabitEthernet0/0/14接口添加到以太网链路聚合组7，以增加吞吐量并提供冗余。"
+  },
+  {
+    "type": "无线接入点配置",
+    "config": "ap-group name AP_group_guest\n radio 1\n radio-2g-profile 2G_hospital\n vap-profile hospital_guest wlan 2",
+    "des": "配置AP_group_guest无线接入点组，指定2G无线电使用2G_hospital配置文件，并将hospital_guest虚拟接入点（VAP）与WLAN 2关联。"
+  },
+  {
+    "type": "接口VRRP配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.100.2\n vrrp vrid 2 priority 80",
+    "des": "为VRRP组2配置虚拟IP地址192.168.100.2，并设置优先级为80，以确保网络中的设备能够在故障时进行无缝切换。"
+  },
+  {
+    "type": "用户界面认证配置",
+    "config": "user-interface vty 10 14\n authentication-mode aaa\n user privilege level 10",
+    "des": "为VTY接口配置AAA认证，并设置用户权限等级为10，允许高级用户访问。"
+  },
+  {
+    "type": "接口汇聚协议配置",
+    "config": "interface Eth-Trunk4\n mode lacp",
+    "des": "在Eth-Trunk4接口上启用LACP协议，以便自动进行链路聚合。"
+  },
+  {
+    "type": "接口描述配置",
+    "config": "interface GigabitEthernet0/0/5\n port description printer",
+    "des": "为GigabitEthernet0/0/5接口设置描述为'printer'，以标识该端口连接的设备类型。"
+  },
+  {
+    "type": "接口链路类型与默认VLAN配置",
+    "config": "interface GigabitEthernet0/0/5\n port link-type access\n port default vlan 202",
+    "des": "在GigabitEthernet0/0/5接口上设置链路类型为access，并指定默认VLAN为202。"
+  },
+  {
+    "type": "接口汇聚配置",
+    "config": "interface GigabitEthernet0/0/15\n eth-trunk 8\n interface GigabitEthernet0/0/16\n eth-trunk 8",
+    "des": "将GigabitEthernet0/0/15和GigabitEthernet0/0/16接口添加到Eth-Trunk 8，以提供链路冗余和负载分担。"
+  },
+  {
+    "type": "无线接入点配置",
+    "config": "ap-group name AP_group_conference\n radio 1\n radio-5g-profile 5G_conference\n vap-profile conference wlan 3",
+    "des": "为AP_group_conference配置5G无线电，应用5G_conference无线电配置文件，并将conference虚拟接入点（VAP）关联到WLAN 3。"
+  },
+  {
+    "type": "接口VRRP配置",
+    "config": "vrrp vrid 4 virtual-ip 192.168.200.2\n vrrp vrid 4 priority 110",
+    "des": "为VRRP组4配置虚拟IP地址192.168.200.2，并设置优先级为110，以确保网络中的设备能够在故障时进行无缝切换。"
+  },
+  {
+    "type": "用户界面认证配置",
+    "config": "user-interface vty 15 19\n authentication-mode aaa\n user privilege level 15",
+    "des": "为VTY接口配置AAA认证，并设置用户权限等级为15，允许管理员访问。"
+  },
+  {
+    "type": "接口汇聚协议配置",
+    "config": "interface Eth-Trunk5\n mode lacp",
+    "des": "在Eth-Trunk5接口上启用LACP协议，以便自动进行链路聚合。"
+  },
+  {
+    "type": "ACL策略配置",
+    "config": "acl name finance-rule 5001\nrule 15 deny ip source 192.168.104.0 0.0.0.255 destination 10.100.4.0 0.0.0.255",
+    "des": "创建名为“finance-rule”的ACL，设置规则15以拒绝从VLAN 104（IP段192.168.104.0/24）到财务服务器（IP段10.100.4.0/24）的IP流量。"
+  },
+  {
+    "type": "DHCP中继配置",
+    "config": "dhcp relay enable\ninterface Vlanif202\ndhcp relay server-ip 10.20.40.2",
+    "des": "启用DHCP中继，并在VLAN 202的接口上指定DHCP服务器的IP地址。"
+  },
+  {
+    "type": "VLAN接口配置",
+    "config": "interface Vlanif203\nip address 10.20.50.1 255.255.255.0",
+    "des": "为Vlanif203接口分配IP地址10.20.50.1，子网掩码为255.255.255.0。"
+  },
+  {
+    "type": "VRRP组配置",
+    "config": "vrrp vrid 5 virtual-ip 192.168.50.1\nvrrp vrid 5 priority 95",
+    "des": "配置VRRP组5，使用虚拟IP地址192.168.50.1，优先级为95。"
+  },
+  {
+    "type": "静态路由配置",
+    "config": "ip route-static 192.168.60.0 255.255.255.0 10.20.50.1",
+    "des": "配置静态路由，确保网络中192.168.60.0/24的流量通过10.20.50.1进行路由。"
+  },
+  {
+    "type": "端口镜像配置",
+    "config": "port-mirroring group 1 interface GigabitEthernet0/0/17 to GigabitEthernet0/0/18 both",
+    "des": "设置端口镜像，将GigabitEthernet0/0/17和GigabitEthernet0/0/18之间的流量复制给组1。"
+  },
+  {
+    "type": "QoS队列配置",
+    "config": "qos queue 1 car 10240 512\nqos queue 2 car 20480 512\nqos queue 3 car 30720 512",
+    "des": "为QoS配置三个队列，分别设置不同的带宽限制和最小带宽保证。"
+  },
+  {
+    "type": "无线SSID配置",
+    "config": "ssid-profile name guest_ssid\nssid guest_ssid\nvap-profile name guest_vap\nservice-vlan vlan-id 203\nssid guest_ssid",
+    "des": "配置访客使用的SSID和VAP，关联到服务VLAN ID 203。"
+  },
+  {
+    "type": "设备名称配置",
+    "config": "sysname Switch-203",
+    "des": "设置设备的系统名称为Switch-203。"
+  },
+  {
+    "type": "时间服务配置",
+    "config": "clock datetime 2024-05-05 12:00:00\nntp enable\nntp server 123.123.123.123",
+    "des": "设置系统时间为2024年5月5日12:00，并启用NTP服务，指定NTP服务器。"
+  },
+  {
+    "type": "日志服务配置",
+    "config": "logbuffer size 1024\nlogging host 10.20.40.3",
+    "des": "配置日志缓冲区大小为1024KB，并将日志发送到IP地址为10.20.40.3的设备。"
+  },
+  {
+    "type": "SNMP配置",
+    "config": "snmp-agent\nsnmp-agent community read public\nsnmp-agent sys-info version all",
+    "des": "启用SNMP服务，设置读取权限的社区字符串为public，并允许查询所有版本的系统信息。"
+  },
+  {
+    "type": "防火墙规则配置",
+    "config": "firewall enable\nfirewall zone trust\nfirewall zone untrust\nfirewall interzone trust untrust permit ip",
+    "des": "启用防火墙，设置信任和非信任区域，并允许两个区域之间的IP流量。"
+  },
+  {
+    "type": "IPv6配置",
+    "config": "ipv6 enable\ninterface Vlanif204\nipv6 address 2001:db8::1/64",
+    "des": "启用IPv6，并为Vlanif204接口分配IPv6地址2001:db8::1/64。"
+  },
+  {
+    "type": "链路聚合配置",
+    "config": "interface Eth-Trunk8\nport link-type trunk\nport trunk allow-pass vlan 1 to 4094\nmode lacp",
+    "des": "在Eth-Trunk8接口上配置链路聚合，允许所有VLAN通过，并启用LACP模式。"
+  },
+  {
+    "type": "策略路由配置",
+    "config": "ip route-static 0.0.0.0 0.0.0.0 10.20.0.1 preference 60",
+    "des": "配置策略路由，将默认路由指向10.20.0.1，优先级为60。"
+  },
+  {
+    "type": "网络地址转换配置",
+    "config": "nat address-group 1 200 detail-nat\nnat outbound 1",
+    "des": "创建地址组1并配置详细NAT，启用NAT出站规则1。"
+  },
+  {
+    "type": "安全设置配置",
+    "config": "storm-control broadcast level 5\nstorm-control multicast level 2\nstorm-control unknown-unicast level 3",
+    "des": "配置广播、组播和未知单播的风暴控制级别。"
+  },
+  {
+    "type": "端口安全配置",
+    "config": "interface GigabitEthernet0/0/19\nport-isolate enable group 3\nport-security maximum 10 action restrict\nport-security violation restrict",
+    "des": "在GigabitEthernet0/0/19接口上启用端口隔离和端口安全，设置最大MAC地址数量为10，违规时限制流量。"
+  },
+  {
+    "type": "VLAN映射配置",
+    "config": "vlan 203\nvlan mapping 1 203 204",
+    "des": "配置VLAN 203，将其映射到VLAN 1和VLAN 204。"
+  },
+  {
+    "type": "超级终端配置",
+    "config": "user-interface vty 0 4\nauthentication-mode password\nset authentication-password simple mysecretpassword\nuser privilege level 3",
+    "des": "为VTY会话配置密码认证，设置密码为mysecretpassword，并设置用户权限等级为3。"
+  },
+  {
+    "type": "动态路由协议配置",
+    "config": "rip\nnetwork 192.168.0.0\nnetwork 10.0.0.0",
+    "des": "启用RIP动态路由协议，并宣告网络192.168.0.0和10.0.0.0。"
+  },
+  {
+    "type": "BGP配置",
+    "config": "bgp 100\nrouter-id 192.168.100.2\nnetwork 10.0.0.0 mask 255.255.255.0\nneighbor 192.168.100.1 remote-as 100",
+    "des": "配置BGP进程，设置路由器ID为192.168.100.2，宣告网络10.0.0.0，并设置邻居关系。"
+  },
+  {
+    "type": "策略路由配置",
+    "config": "ip policy route-map policy1\nroute-map policy1 permit 10\nmatch ip address 5001\nset next-hop 10.20.60.1",
+    "des": "创建策略路由，使用名为policy1的路由映射，匹配ACL 5001，并设置下一跳为10.20.60.1。"
+  }
+]

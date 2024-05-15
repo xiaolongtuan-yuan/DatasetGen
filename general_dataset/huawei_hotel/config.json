@@ -1,0 +1,422 @@
+[
+  {
+    "device": "S7706",
+    "type": "OSPF路由配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 10.1.0.0 0.0.0.255",
+    "des": "在S7706设备上启用OSPF协议，并配置其为区域0，同时宣告10.1.0.0/24网段以实现路由功能。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP热备份配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 120",
+    "des": "在AC6605_1设备上配置VRRP备份组1，虚拟IP地址设置为172.16.100.1，并设置优先级为120，以确保在主设备故障时能够提供高优先级的备份。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\n vlan 101\n dhcp snooping enable",
+    "des": "在S5700-LI_1设备上全局启用DHCP Snooping功能，并在VLAN 101下启用该功能，以提高DHCP服务器的安全性。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet1/0/1\n port-isolate enable",
+    "des": "在S5720EI-iStack的GigabitEthernet1/0/1接口上启用端口隔离功能，以隔离端口之间的流量，增强网络安全。"
+  },
+  {
+    "device": "S7706",
+    "type": "ACL访问控制配置",
+    "config": "acl name acl-employee 3001\n rule 5 permit ip source 172.16.101.0 0.0.0.255 destination 10.100.2.0 0.0.0.255",
+    "des": "在S7706设备上创建名为acl-employee的访问控制列表，并设置规则允许源IP为172.16.101.0/24的流量访问目的IP为10.100.2.0/24的网络。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "WLAN安全配置",
+    "config": "security-profile name hotel\n ssid-profile name hotel_employee",
+    "des": "在AC6605_1设备上配置名为hotel的安全模板，并引用名为hotel_employee的SSID模板，用于无线网络的安全设置。"
+  },
+  {
+    "device": "S5700-LI_2",
+    "type": "接口流量策略配置",
+    "config": "interface GigabitEthernet0/0/1\n traffic-policy test inbound\n traffic-policy test outbound",
+    "des": "在S5700-LI_2设备的GigabitEthernet0/0/1接口上应用名为test的入站和出站流量策略，以控制通过该接口的流量。"
+  },
+  {
+    "device": "S7706",
+    "type": "VLAN接口配置",
+    "config": "interface Vlanif101\n ip address 172.16.101.1 255.255.255.0",
+    "des": "在S7706设备上为VLAN 101配置IP地址为172.16.101.1/24，用于该VLAN的网络接口设置。"
+  },
+  {
+    "device": "S7706",
+    "type": "VLAN配置",
+    "config": "vlan batch 10 100 to 106",
+    "des": "在S7706设备上批量创建VLAN 10, 100, 101, 102, 103, 104, 105, 106，用于不同的网络隔离需求。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "接口配置",
+    "config": "interface Vlanif100\n ip address 172.16.100.2 255.255.255.0",
+    "des": "在AC6605_1设备上为VLAN 100接口配置IP地址172.16.100.2，子网掩码为255.255.255.0，用于管理VLAN的网络通信。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 120",
+    "des": "在AC6605_2设备上配置VRRP虚拟IP地址为172.16.100.1，优先级为120，确保在主设备故障时能够高优先级地提供备份。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable",
+    "des": "在S5700-LI_1设备的相应接口上启用端口隔离，以增强网络安全，避免不同VLAN间的非授权通信。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "堆叠配置",
+    "config": "interface XGigabitEthernet0/0/1\n eth-trunk 0",
+    "des": "在S5720EI-iStack设备上通过XGigabitEthernet0/0/1接口加入到Eth-Trunk 0中，用于建立设备间的堆叠连接。"
+  },
+  {
+    "device": "S7706",
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\n interface Vlanif101\n dhcp select interface",
+    "des": "在S7706设备上启用DHCP服务，并通过VLAN接口Vlanif101提供DHCP服务，自动为接入的设备分配IP地址。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "认证方案配置",
+    "config": "authentication-scheme hotel\n authentication-mode radius",
+    "des": "在AC6605_1设备上创建名为hotel的认证方案，使用RADIUS认证模式，用于无线网络用户的认证。"
+  },
+  {
+    "device": "S5700-LI_2",
+    "type": "VLAN配置",
+    "config": "vlan batch 100 103",
+    "des": "在S5700-LI_2设备上批量创建VLAN 100和VLAN 103，分别用于AP管理和其他业务VLAN。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "流量策略配置",
+    "config": "traffic classifier test\n if-match destination-mac 0100-5e00-0000 ffff-ff00-0000",
+    "des": "在S5720EI-iStack设备上定义流分类'test'，匹配目的MAC地址为0100-5e00-0000到ffff-ff00-0000的流量，用于后续的流量管理和策略应用。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "URL重定向配置",
+    "config": "url-template name hotel\n url http://10.1.0.2:8080/portal\n url-parameter ssid ssid redirect-url url",
+    "des": "在AC6605_1设备上配置名为hotel的URL模板，设置重定向URL为http://10.1.0.2:8080/portal，并指定URL中携带的参数为用户关联SSID和原始访问URL。"
+  },
+  {
+    "device": "AC6605_2",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif100\n ip address 172.16.100.3 255.255.255.0",
+    "des": "在AC6605_2设备上为VLAN 100接口配置IP地址172.16.100.3，子网掩码为255.255.255.0，用于管理VLAN 100的网络通信。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "端口流量策略配置",
+    "config": "interface GigabitEthernet0/0/2\n traffic-policy test inbound\n traffic-policy test outbound",
+    "des": "在S5700-LI_1设备上为GigabitEthernet0/0/2接口配置入站和出站流量策略'test'，用于管理和限制通过该接口的流量。"
+  },
+  {
+    "device": "S5700-LI_2",
+    "type": "VLAN配置",
+    "config": "vlan batch 100 103",
+    "des": "在S5700-LI_2设备上创建VLAN 100和VLAN 103，用于不同的网络隔离和服务需求。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "堆叠接口配置",
+    "config": "interface XGigabitEthernet0/0/1\n eth-trunk 0",
+    "des": "在S5720EI-iStack设备上将XGigabitEthernet0/0/1接口加入到Eth-Trunk 0中，用于建立设备间的堆叠链路。"
+  },
+  {
+    "device": "S7706",
+    "type": "DHCP排除IP配置",
+    "config": "dhcp server excluded-ip-address 172.16.100.3",
+    "des": "在S7706设备的DHCP服务器配置中，排除IP地址172.16.100.3，防止该地址被分配给客户端。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "WLAN用户隔离配置",
+    "config": "traffic-profile name hotel\n user-isolate all",
+    "des": "在AC6605_1设备上为名为hotel的流量模板配置用户隔离策略，确保所有用户之间的流量是相互隔离的，增强网络安全。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable",
+    "des": "在S5700-LI_1设备上启用DHCP Snooping功能，增加网络中DHCP通信的安全性。"
+  },
+  {
+    "device": "S7706",
+    "type": "接口链路聚合配置",
+    "config": "interface Eth-Trunk0\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 10 100 to 102",
+    "des": "在S7706设备的Eth-Trunk0接口上配置链路聚合，允许VLAN 10, 100至102通过，以提高链路的冗余性和吞吐量。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "无线接入控制配置",
+    "config": "wlan\n ap-group name AP_group_office\n ap auth-mode mac-auth",
+    "des": "在AC6605_1设备上为无线接入点设置AP_group_office组，并指定认证模式为MAC认证，增强无线接入的安全性。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "接口默认VLAN配置",
+    "config": "interface GigabitEthernet0/0/1\n port default vlan 101",
+    "des": "在S5700-LI_1设备的GigabitEthernet0/0/1接口上设置默认VLAN为101，确保通过该接口的未标记流量属于VLAN 101。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "堆叠链路配置",
+    "config": "interface XGigabitEthernet0/0/1\n eth-trunk 0",
+    "des": "在S5720EI-iStack设备的XGigabitEthernet0/0/1接口上配置为Eth-Trunk 0的一部分，用于建立和管理堆叠链路。"
+  },
+  {
+    "device": "S7706",
+    "type": "RADIUS服务器配置",
+    "config": "radius-server template hotel\n radius-server shared-key cipher %^%#jFB$;|}{hPY\u0026{yGWzOA\u003cOAG43)~]B(Nq\\V;\u0026`rXF%^%#",
+    "des": "在S7706设备上配置RADIUS服务器模板hotel，并设置共享密钥，用于认证、计费和授权过程。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VAP配置",
+    "config": "vap-profile name hotel_employee\n service-vlan vlan-id 102",
+    "des": "在AC6605_1设备上为酒店员工创建VAP模板hotel_employee，并为其指定服务VLAN的ID为102，用于隔离用户流量和提供特定服务。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\n vlan 101\n dhcp snooping enable",
+    "des": "在S5700-LI_1设备上启用DHCP Snooping功能，并在VLAN 101上启用该功能，以防止DHCP欺骗和攻击，提高网络安全。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口镜像配置",
+    "config": "interface GigabitEthernet1/0/1\n traffic-policy test inbound\n traffic-policy test outbound",
+    "des": "在S5720EI-iStack设备的GigabitEthernet1/0/1接口上应用入站和出站流量策略'test'，用于监控和控制通过该端口的流量。"
+  },
+  {
+    "device": "S7706",
+    "type": "访问控制列表配置",
+    "config": "acl name acl-employee 3001\n rule 0 permit ip source 192.168.101.0 0.0.0.255 destination 192.168.100.0 0.0.0.255",
+    "des": "在S7706设备上定义了一个名为acl-employee的访问控制列表，规则0允许源IP地址为192.168.101.0/24的流量访问目的IP地址为192.168.100.0/24的网络段。"
+  },
+  {
+    "device": "S7706",
+    "type": "访问控制列表配置",
+    "config": "acl name acl-visitor 3003\n rule 5 deny ip source 192.168.104.0 0.0.0.255 destination 192.168.103.0 0.0.0.255",
+    "des": "在S7706设备上定义了一个名为acl-visitor的访问控制列表，规则5拒绝源IP地址为192.168.104.0/24的流量访问目的IP地址为192.168.103.0/24的网络段。"
+  },
+  {
+    "device": "S7706",
+    "type": "访问控制列表配置",
+    "config": "acl name acl-iptv 3005\n rule 10 permit ip source 192.168.103.0 0.0.0.255 destination 10.100.3.0 0.0.0.255",
+    "des": "在S7706设备上定义了一个名为acl-iptv的访问控制列表，规则10允许源IP地址为192.168.103.0/24的流量访问目的IP地址为10.100.3.0/24的网络段，适用于IPTV流量。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "流量策略配置",
+    "config": "traffic classifier test operator and\n if-match destination-mac 0100-5e00-0000 ffff-ff00-0000\n traffic policy test match-order config\n classifier test behavior test",
+    "des": "在S5700-LI_1设备上创建了一个流量分类器test，匹配目的MAC地址以0100-5e开头的流量，并应用了一个流量策略test，用于管理特定的广播、组播流量。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口安全配置",
+    "config": "interface GigabitEthernet1/0/1\n port-isolate enable",
+    "des": "在S5720EI-iStack设备的GigabitEthernet1/0/1接口上启用了端口隔离功能，以隔离接入的设备，防止VLAN间的非授权通信。"
+  },
+  {
+    "device": "S7706",
+    "type": "OSPF路由配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 10.1.0.0 0.0.0.255\n network 172.16.100.0 0.0.0.255\n network 172.16.101.0 0.0.0.255\n network 172.16.102.0 0.0.0.255\n network 172.16.103.0 0.0.0.255\n network 172.16.104.0 0.0.0.255\n network 172.16.105.0 0.0.0.255\n network 172.16.106.0 0.0.0.255",
+    "des": "在S7706设备上启用OSPF协议进程1，并将其配置在区域0中。同时宣告了多个IP网络，包括10.1.0.0/24、172.16.100.0/24等，这些网络将被OSPF路由协议用来进行路由计算和分发。"
+  },
+  {
+    "device": "S7706",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif101\n ip address 172.16.101.1 255.255.255.0",
+    "des": "为S7706设备上的VLAN 101接口分配IP地址172.16.101.1，子网掩码为255.255.255.0，该接口将参与OSPF路由协议的通信。"
+  },
+  {
+    "device": "S7706",
+    "type": "接口链路聚合配置",
+    "config": "interface Eth-Trunk0\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 10 100 to 102",
+    "des": "在S7706设备的Eth-Trunk0接口上配置链路聚合，允许VLAN 10, 100至102通过。这通常用于连接到交换机，并提高链路的冗余性和吞吐量，但不直接涉及OSPF或BGP配置。"
+  },
+  {
+    "device": "S7706",
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\n interface Vlanif101\n dhcp select interface",
+    "des": "在S7706设备上启用DHCP服务，并在VLAN 101接口上应用该服务，以便为连接到该VLAN的设备自动分配IP地址。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 1 virtual-ip 172.16.100.1\n vrrp vrid 1 priority 120\n vrrp vrid 1 preempt-mode timer delay 1200",
+    "des": "在AC6605_1设备上配置虚拟路由器冗余协议(VRRP)，设置虚拟IP地址为172.16.100.1，优先级为120，并设置抢占模式的延迟时间为1200秒，以确保设备AC6605_1在作为主设备时的稳定性。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet0/0/2\n port-isolate enable",
+    "des": "在S5700-LI_1设备的GigabitEthernet0/0/2接口上启用端口隔离，以增强网络安全，防止同一接口上的不同VLAN之间的非授权通信。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "堆叠配置",
+    "config": "interface XGigabitEthernet0/0/1\n eth-trunk 0",
+    "des": "在S5720EI-iStack设备上，将XGigabitEthernet0/0/1接口加入到Eth-Trunk 0中，用于建立和管理交换机之间的堆叠链路。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "无线局域网(WLAN)配置",
+    "config": "wlan\n ap-group name AP_group_office\n vap-profile hotel_employee",
+    "des": "在AC6605_1设备上配置无线局域网，创建名为AP_group_office的AP组，并应用名为hotel_employee的VAP模板，用于管理无线接入点和虚拟接入点的配置。"
+  },
+  {
+    "device": "S7706",
+    "type": "RADIUS服务器配置",
+    "config": "radius-server template hotel\n radius-server shared-key cipher %^%#jFB$;|}{hPY\u0026{yGWzOA\u003cOAG43)~]B(Nq\\V;\u0026`rXF%^%#",
+    "des": "在S7706设备上配置RADIUS服务器模板hotel，并设置加密共享密钥，用于用户认证和计费。"
+  },
+  {
+    "device": "S7706",
+    "type": "OSPF路由配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 192.168.1.0 0.0.0.255",
+    "des": "在S7706设备上启用OSPF协议，并配置其为区域0，同时宣告192.168.1.0/24网段以实现路由功能。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "端口安全配置",
+    "config": "interface GigabitEthernet0/0/3\n port-isolate enable",
+    "des": "在S5700-LI_1设备的GigabitEthernet0/0/3接口上启用端口隔离，增强网络安全。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "堆叠链路配置",
+    "config": "interface XGigabitEthernet0/0/2\n eth-trunk 1",
+    "des": "在S5720EI-iStack设备的XGigabitEthernet0/0/2接口上配置为Eth-Trunk 1的一部分，用于建立和管理堆叠链路。"
+  },
+  {
+    "device": "S7706",
+    "type": "RADIUS服务器配置",
+    "config": "radius-server template guest\n radius-server shared-key cipher @#$%^&*()1234567890",
+    "des": "在S7706设备上配置RADIUS服务器模板guest，并设置新的加密共享密钥，用于用户认证和计费。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VAP配置",
+    "config": "vap-profile name guest_access\n service-vlan vlan-id 200",
+    "des": "在AC6605_1设备上为访客创建VAP模板guest_access，并为其指定服务VLAN的ID为200，用于隔离用户流量。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\n vlan 200\n dhcp snooping enable",
+    "des": "在S5700-LI_1设备上启用DHCP Snooping功能，并在VLAN 200上启用该功能，以防止DHCP欺骗和攻击，提高网络安全。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口镜像配置",
+    "config": "interface GigabitEthernet1/0/2\n traffic-policy monitor inbound\n traffic-policy monitor outbound",
+    "des": "在S5720EI-iStack设备的GigabitEthernet1/0/2接口上应用入站和出站流量策略'monitor'，用于监控和控制通过该端口的流量。"
+  },
+  {
+    "device": "S7706",
+    "type": "访问控制列表配置",
+    "config": "acl name acl-internal 3006\n rule 15 permit ip source 10.100.0.0 0.0.0.255 destination 10.200.0.0 0.0.0.255",
+    "des": "在S7706设备上定义了一个名为acl-internal的访问控制列表，规则15允许源IP地址为10.100.0.0/24的流量访问目的IP地址为10.200.0.0/24的网络段。"
+  },
+  {
+    "device": "S7706",
+    "type": "访问控制列表配置",
+    "config": "acl name acl-external 3007\n rule 20 deny ip source 10.50.0.0 0.0.0.255 destination 10.60.0.0 0.0.0.255",
+    "des": "在S7706设备上定义了一个名为acl-external的访问控制列表，规则20拒绝源IP地址为10.50.0.0/24的流量访问目的IP地址为10.60.0.0/24的网络段。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "流量策略配置",
+    "config": "traffic classifier test2 operator and\n if-match destination-mac 0200-5e00-0000 ffff-ff00-0000\n traffic policy test2 match-order config\n classifier test2 behavior test2",
+    "des": "在S5700-LI_1设备上创建了一个流量分类器test2，匹配目的MAC地址以0200-5e开头的流量，并应用了一个流量策略test2，用于管理特定的广播、组播流量。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口安全配置",
+    "config": "interface GigabitEthernet1/0/3\n port-isolate enable",
+    "des": "在S5720EI-iStack设备的GigabitEthernet1/0/3接口上启用了端口隔离功能，以隔离接入的设备，防止VLAN间的非授权通信。"
+  },
+  {
+    "device": "S7706",
+    "type": "OSPF路由配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 10.2.0.0 0.0.0.255\n network 10.3.0.0 0.0.0.255",
+    "des": "在S7706设备上启用OSPF协议进程1，并将其配置在区域0中。同时宣告了多个IP网络，包括10.2.0.0/24、10.3.0.0/24，这些网络将被OSPF路由协议用来进行路由计算和分发。"
+  },
+  {
+    "device": "S7706",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif102\n ip address 192.168.2.1 255.255.255.0",
+    "des": "为S7706设备上的VLAN 102接口分配IP地址192.168.2.1，子网掩码为255.255.255.0，该接口将参与OSPF路由协议的通信。"
+  },
+  {
+    "device": "S7706",
+    "type": "接口链路聚合配置",
+    "config": "interface Eth-Trunk1\n port link-type trunk\n undo port trunk allow-pass vlan 1\n port trunk allow-pass vlan 200 202 to 204",
+    "des": "在S7706设备的Eth-Trunk1接口上配置链路聚合，允许VLAN 200, 202至204通过。这通常用于连接到交换机，并提高链路的冗余性和吞吐量。"
+  },
+  {
+    "device": "S7706",
+    "type": "DHCP服务配置",
+    "config": "dhcp enable\n interface Vlanif102\n dhcp select interface",
+    "des": "在S7706设备上启用DHCP服务，并在VLAN 102接口上应用该服务，以便为连接到该VLAN的设备自动分配IP地址。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP配置",
+    "config": "vrrp vrid 3 virtual-ip 192.168.3.1\n vrrp vrid 3 priority 100\n vrrp vrid 3 preempt-mode timer delay 900",
+    "des": "在AC6605_1设备上配置虚拟路由器冗余协议(VRRP)，设置虚拟IP地址为192.168.3.1，优先级为100，并设置抢占模式的延迟时间为900秒，以确保设备AC6605_1在作为主设备时的稳定性。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet0/0/4\n port-isolate enable",
+    "des": "在S5700-LI_1设备的GigabitEthernet0/0/4接口上启用端口隔离，以增强网络安全，防止同一接口上的不同VLAN之间的非授权通信。"
+  },
+  {
+    "device": "S7706",
+    "type": "OSPF路由配置",
+    "config": "ospf 1\n area 0.0.0.0\n network 192.168.1.0 0.0.0.255",
+    "des": "在S7706设备上启用OSPF协议，并配置其为区域0，同时宣告192.168.1.0/24网段以实现路由功能。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "VRRP热备份配置",
+    "config": "vrrp vrid 2 virtual-ip 192.168.2.1\n vrrp vrid 2 priority 100",
+    "des": "在AC6605_1设备上配置VRRP备份组2，虚拟IP地址设置为192.168.2.1，并设置优先级为100，以确保在主设备故障时能够提供备份。"
+  },
+  {
+    "device": "S5700-LI_1",
+    "type": "DHCP Snooping配置",
+    "config": "dhcp snooping enable\n vlan 102\n dhcp snooping enable",
+    "des": "在S5700-LI_1设备上全局启用DHCP Snooping功能，并在VLAN 102下启用该功能，以提高DHCP服务器的安全性。"
+  },
+  {
+    "device": "S5720EI-iStack",
+    "type": "端口隔离配置",
+    "config": "interface GigabitEthernet1/0/2\n port-isolate enable",
+    "des": "在S5720EI-iStack的GigabitEthernet1/0/2接口上启用端口隔离功能，以隔离端口之间的流量，增强网络安全。"
+  },
+  {
+    "device": "S7706",
+    "type": "ACL访问控制配置",
+    "config": "acl name acl-management 3002\n rule 10 permit ip source 10.0.0.0 0.0.0.255 destination 192.168.2.0 0.0.0.255",
+    "des": "在S7706设备上创建名为acl-management的访问控制列表，并设置规则允许源IP为10.0.0.0/24的流量访问目的IP为192.168.2.0/24的网络。"
+  },
+  {
+    "device": "AC6605_1",
+    "type": "WLAN安全配置",
+    "config": "security-profile name corporate\n ssid-profile name corporate_access",
+    "des": "在AC6605_1设备上配置名为corporate的安全模板，并引用名为corporate_access的SSID模板，用于无线网络的安全设置。"
+  }
+]

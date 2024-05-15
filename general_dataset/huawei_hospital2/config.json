@@ -1,0 +1,762 @@
+[
+  {
+    "device": "S5700-1",
+    "type": "交换机端口配置",
+    "config": "interface GigabitEthernet0/0/1\n port link-type trunk\n port trunk allow-pass vlan 100 201",
+    "des": "在S5700-1的GigabitEthernet0/0/1接口上配置为trunk模式，并允许VLAN 100和201通过。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "端口默认VLAN配置",
+    "config": "port trunk pvid vlan 100",
+    "des": "在S5700-1的端口上设置默认VLAN（PVID）为100。",
+    "variation": "更改VLAN号将改变端口的默认VLAN。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 1",
+    "des": "在S5700-1的端口上启用端口隔离，并将其分配到隔离组1。",
+    "variation": "更改group号将改变端口隔离的分组。"
+  },
+  {
+    "device": "AC",
+    "type": "VLAN配置",
+    "config": "vlan batch 100 to 102 200 to 202 300",
+    "des": "在AC上创建VLAN 100至102和VLAN 200至202以及VLAN 300。",
+    "variation": "更改VLAN范围将影响不同VLAN的创建。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP服务启用",
+    "config": "dhcp enable",
+    "des": "在AC上启用DHCP服务。",
+    "variation": "执行'undo dhcp enable'将禁用DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "RADIUS服务器模板配置",
+    "config": "radius-server template radius1\n radius-server shared-key cipher %^%#ZGx{:~QFtUUhhG!`ba-PTj=H1p_J\u003c1/%ZAXuB5)0%^%#",
+    "des": "在AC上创建名为radius1的RADIUS服务器模板，并设置共享密钥。",
+    "variation": "更改shared-key的值将改变RADIUS服务器的共享密钥。"
+  },
+  {
+    "device": "AC",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif100\n ip address 10.23.100.1 255.255.255.0",
+    "des": "为AC上的Vlanif100接口分配IP地址10.23.100.1和子网掩码255.255.255.0。",
+    "variation": "更改IP地址或子网掩码将改变接口的网络配置。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP选择接口配置",
+    "config": "dhcp select interface",
+    "des": "在AC的Vlanif接口上选择使用接口地址池进行DHCP服务。",
+    "variation": "执行'undo dhcp select interface'将取消接口的DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "Portal认证配置",
+    "config": "portal-access-profile portal1\n web-auth-server portal1 direct",
+    "des": "在AC上创建名为portal1的Portal访问配置，并绑定名为portal1的Portal服务器模板。",
+    "variation": "更改web-auth-server的值为非direct将改变Portal认证的方式。"
+  },
+  {
+    "device": "AC",
+    "type": "用户隔离配置",
+    "config": "traffic-profile name traffic1\n user-isolate l2",
+    "des": "在AC上创建名为traffic1的流量模板，并启用二层用户隔离。",
+    "variation": "执行'undo user-isolate l2'将取消二层用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID配置",
+    "config": "ssid-profile name wlan-ssid\n ssid hospital-wlan",
+    "des": "在AC上创建名为wlan-ssid的SSID模板，并设置SSID名称为hospital-wlan。",
+    "variation": "更改ssid的值将改变无线网络的名称。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板配置",
+    "config": "vap-profile name wlan-vap1\n forward-mode tunnel\n service-vlan vlan-id 101",
+    "des": "在AC上创建名为wlan-vap1的VAP模板，设置业务转发模式为隧道转发，服务VLAN为101。",
+    "variation": "更改service-vlan vlan-id的值将改变VAP的服务VLAN。"
+  },
+  {
+    "device": "AC",
+    "type": "射频信道和功率配置",
+    "config": "radio 0\n channel 20mhz 1\n eirp 10",
+    "des": "在AC的无线电0上配置20MHz的信道1和EIRP（等效全向辐射功率）为10。",
+    "variation": "更改channel或eirp的值将改变射频的信道配置和功率输出。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组配置",
+    "config": "ap-group name ap-group1\n regulatory-domain-profile domain1",
+    "des": "在AC上创建名为ap-group1的AP组，并关联名为domain1的监管域模板。",
+    "variation": "更改ap-group的名称或regulatory-domain-profile的名称将改变AP组的配置。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 101 type-id 46 ap-mac 60de-4476-e320 ap-sn 210235419610CB002378\n ap-name ap-101\n ap-group ap-group1",
+    "des": "在AC上将ID为101、MAC地址为60de-4476-e320的AP上线，并分配到ap-group1组。",
+    "variation": "更改ap-id、ap-mac或ap-group的值将改变AP的上线配置或所属组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频配置",
+    "config": "radio 0\n calibrate auto-channel-select disable\n calibrate auto-txpower-select disable",
+    "des": "在AC的无线电0上禁用自动信道选择和自动传输功率选择功能。",
+    "variation": "执行'calibrate auto-channel-select enable'或'calibrate auto-txpower-select enable'将启用自动选择功能。"
+  },
+  {
+    "device": "AC",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif200\n ip address 10.23.200.2 255.255.255.0",
+    "des": "为AC上的Vlanif200接口分配IP地址10.23.200.2和子网掩码255.255.255.0。",
+    "variation": "更改IP地址或子网掩码将改变接口的网络配置。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN流量隔离配置",
+    "config": "traffic-profile name traffic1\n user-isolate enable",
+    "des": "在AC上创建名为traffic1的流量模板，并启用用户隔离。",
+    "variation": "执行'undo user-isolate enable'将取消用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID模板配置",
+    "config": "ssid-profile name wlan-ssid\n ssid hospital-wlan",
+    "des": "在AC上创建名为wlan-ssid的SSID模板，并设置SSID为hospital-wlan。",
+    "variation": "更改ssid的值将改变无线网络的名称。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP服务VLAN配置",
+    "config": "vap-profile name wlan-vap1\n service-vlan vlan-id 101",
+    "des": "在AC上创建名为wlan-vap1的VAP模板，设置服务VLAN为101。",
+    "variation": "更改vlan-id的值将改变VAP的服务VLAN。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组射频信道配置",
+    "config": "ap-group name ap-group1\n radio 0\n calibrate auto-channel-select disable",
+    "des": "在AC上为ap-group1的无线电0禁用自动信道选择。",
+    "variation": "执行'calibrate auto-channel-select enable'将启用自动信道选择。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 101\n ap-name ap-101\n ap-group ap-group1",
+    "des": "在AC上将ID为101的AP上线，并命名为ap-101，同时分配到ap-group1组。",
+    "variation": "更改ap-id、ap-name或ap-group的值将改变AP的配置或所属组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频功率配置",
+    "config": "radio 0\n eirp 10",
+    "des": "在AC的无线电0上设置EIRP为10。",
+    "variation": "更改eirp的值将改变AP的射频功率输出。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "交换机端口配置",
+    "config": "interface GigabitEthernet0/0/1\n port link-type trunk\n port trunk allow-pass vlan 100 202",
+    "des": "在S5700-2的GigabitEthernet0/0/1接口上配置为trunk模式，并允许VLAN 100和202通过。",
+    "variation": "更改端口号或VLAN列表将改变端口的配置。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "端口PVID配置",
+    "config": "port trunk pvid vlan 100",
+    "des": "在S5700-2的端口上设置默认VLAN（PVID）为100。",
+    "variation": "更改VLAN号将改变端口的默认VLAN。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 1",
+    "des": "在S5700-2的端口上启用端口隔离，并分配到隔离组1。",
+    "variation": "更改group号将改变端口隔离的分组。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN安全模板配置",
+    "config": "security-profile name wlan-security",
+    "des": "在AC上创建名为wlan-security的安全模板。",
+    "variation": "可以配置安全模板以包含加密和认证设置。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN AP组VAP模板应用",
+    "config": "ap-group name ap-group1\n vap-profile wlan-vap1 wlan 1 radio 0",
+    "des": "在AC上为ap-group1应用名为wlan-vap1的VAP模板到无线电0。",
+    "variation": "更改vap-profile的名称或wlan和radio的值会改变应用的VAP配置。"
+  },
+  {
+    "device": "AC",
+    "type": "AP详细配置",
+    "config": "ap-id 101\n ap-name ap-101\n radio 0\n channel 20mhz 1",
+    "des": "在AC上配置AP ID 101的名称为ap-101，并为其无线电0设置信道为1。",
+    "variation": "更改ap-id、ap-name、radio或channel的值会改变AP的具体配置。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频功率限制配置",
+    "config": "eirp 10",
+    "des": "在AC上为指定的AP无线电设置最大EIRP（等效全向辐射功率）为10。",
+    "variation": "更改eirp的数值会改变AP的射频功率输出限制。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组射频自动调优禁用",
+    "config": "calibrate auto-channel-select disable\n calibrate auto-txpower-select disable",
+    "des": "在AC上为AP组禁用自动信道选择和自动传输功率选择功能。",
+    "variation": "执行'calibrate auto-channel-select enable'或'calibrate auto-txpower-select enable'将启用对应的自动调优功能。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "交换机端口VLAN配置",
+    "config": "interface GigabitEthernet0/0/2\n port trunk allow-pass vlan 100 201",
+    "des": "在S5700-1的GigabitEthernet0/0/2接口上允许VLAN 100和201通过。",
+    "variation": "更改端口号或allow-pass的VLAN列表会改变端口的VLAN配置。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "交换机端口PVID和隔离配置",
+    "config": "port trunk pvid vlan 100\n port-isolate enable group 1",
+    "des": "在S5700-2的端口上设置PVID为VLAN 100，并启用端口隔离，分配到隔离组1。",
+    "variation": "更改PVID的VLAN号或port-isolate的group号会改变端口的默认VLAN和隔离设置。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN安全策略配置",
+    "config": "security-profile name wlan-security\n security wpa3-personal",
+    "des": "在AC上创建名为wlan-security的安全模板，并设置安全策略为WPA3-Personal。",
+    "variation": "更改security的值会改变应用的无线网络安全策略。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID广播配置",
+    "config": "ssid-profile name wlan-ssid\n broadcast enable",
+    "des": "在AC上创建名为wlan-ssid的SSID模板，并启用SSID的广播。",
+    "variation": "执行'broadcast disable'将禁止SSID的广播。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP业务VLAN配置",
+    "config": "vap-profile name wlan-vap2\n service-vlan vlan-id 102",
+    "des": "在AC上创建名为wlan-vap2的VAP模板，设置业务VLAN为102。",
+    "variation": "更改service-vlan vlan-id的值会改变VAP的业务VLAN。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组VAP模板应用（不同无线电）",
+    "config": "ap-group name ap-group2\n vap-profile wlan-vap2 wlan 1 radio 1",
+    "des": "在AC上为ap-group2应用名为wlan-vap2的VAP模板到无线电1。",
+    "variation": "更改ap-group、vap-profile或radio的值会改变AP组应用的VAP配置。"
+  },
+  {
+    "device": "AC",
+    "type": "AP身份验证模式配置",
+    "config": "ap auth-mode mac-auth",
+    "des": "在AC上设置AP身份验证模式为MAC地址认证。",
+    "variation": "更改auth-mode的值可以改变AP的身份验证方式，如使用'certificate-auth'进行证书认证。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线导入配置",
+    "config": "ap-id 201 ap-mac 60de-4476-e360\n ap-name ap-201",
+    "des": "在AC上将具有MAC地址60de-4476-e360的AP上线，并命名为ap-201。",
+    "variation": "更改ap-id或ap-mac的值将指定不同的AP上线，而更改ap-name的值将改变AP的名称。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组关联配置",
+    "config": "ap-group ap-group1",
+    "des": "将AP加入到名为ap-group1的AP组中。",
+    "variation": "更改ap-group的名称会将AP关联到不同的AP组。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN用户隔离配置",
+    "config": "traffic-profile name traffic1\n user-isolate enable",
+    "des": "在AC上为名为traffic1的流量模板启用用户隔离。",
+    "variation": "执行'undo user-isolate enable'将关闭用户隔离功能。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID广播禁用配置",
+    "config": "ssid-profile name wlan-ssid\n broadcast disable",
+    "des": "在AC上为名为wlan-ssid的SSID模板禁用SSID广播。",
+    "variation": "执行'broadcast enable'将允许SSID广播。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板安全策略配置",
+    "config": "vap-profile name wlan-vap1\n security-profile wlan-security",
+    "des": "在AC上为名为wlan-vap1的VAP模板应用名为wlan-security的安全策略。",
+    "variation": "更改security-profile的名称会应用不同的安全策略。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板SSID应用配置",
+    "config": "ssid-profile wlan-ssid",
+    "des": "在AC上的VAP模板中应用名为wlan-ssid的SSID。",
+    "variation": "更改ssid-profile的名称会应用不同的SSID。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板认证方法配置",
+    "config": "authentication-profile portal1",
+    "des": "在AC上的VAP模板中应用名为portal1的认证方法。",
+    "variation": "更改authentication-profile的名称会应用不同的认证方法。"
+  },
+  {
+    "device": "AC",
+    "type": "AP有线端口模板配置",
+    "config": "wired-port-profile name wired1\n vlan pvid 201",
+    "des": "在AC上为名为wired1的有线端口模板设置默认VLAN为201。",
+    "variation": "更改wired-port-profile的名称或vlan pvid的值会改变有线端口的默认VLAN设置。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组流量模板关联配置",
+    "config": "ap-group name ap-group1\n traffic-profile traffic1",
+    "des": "在AC上为名为ap-group1的AP组关联名为traffic1的流量模板。",
+    "variation": "更改ap-group或traffic-profile的名称会关联不同的流量模板。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "交换机端口配置",
+    "config": "interface GigabitEthernet0/0/2\n port link-type trunk\n port trunk allow-pass vlan 300 400",
+    "des": "在S5700-1的GigabitEthernet0/0/2接口上配置为trunk模式，并允许VLAN 300和400通过。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "端口默认VLAN配置",
+    "config": "port trunk pvid vlan 300",
+    "des": "在S5700-1的端口上设置默认VLAN（PVID）为300。"
+  },
+  {
+    "device": "S5700-1",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 2",
+    "des": "在S5700-1的端口上启用端口隔离，并将其分配到隔离组2。"
+  },
+  {
+    "device": "AC",
+    "type": "VLAN配置",
+    "config": "vlan batch 300 to 302 400 to 402 500",
+    "des": "在AC上创建VLAN 300至302和VLAN 400至402以及VLAN 500。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP服务启用",
+    "config": "dhcp enable",
+    "des": "在AC上启用DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "RADIUS服务器模板配置",
+    "config": "radius-server template radius2\n radius-server shared-key cipher %^%#NewSharedKey%^%",
+    "des": "在AC上创建名为radius2的RADIUS服务器模板，并设置新的共享密钥。"
+  },
+  {
+    "device": "AC",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif300\n ip address 192.168.300.1 255.255.255.0",
+    "des": "为AC上的Vlanif300接口分配IP地址192.168.300.1和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP选择接口配置",
+    "config": "dhcp select interface",
+    "des": "在AC的Vlanif接口上选择使用接口地址池进行DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "Portal认证配置",
+    "config": "portal-access-profile portal2\n web-auth-server portal2 radius",
+    "des": "在AC上创建名为portal2的Portal访问配置，并绑定名为portal2的Portal服务器模板。"
+  },
+  {
+    "device": "AC",
+    "type": "用户隔离配置",
+    "config": "traffic-profile name traffic2\n user-isolate l2",
+    "des": "在AC上创建名为traffic2的流量模板，并启用二层用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID配置",
+    "config": "ssid-profile name wlan-ssid2\n ssid office-wlan",
+    "des": "在AC上创建名为wlan-ssid2的SSID模板，并设置SSID名称为office-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板配置",
+    "config": "vap-profile name wlan-vap2\n forward-mode tunnel\n service-vlan vlan-id 102",
+    "des": "在AC上创建名为wlan-vap2的VAP模板，设置业务转发模式为隧道转发，服务VLAN为102。"
+  },
+  {
+    "device": "AC",
+    "type": "射频信道和功率配置",
+    "config": "radio 1\n channel 20mhz 3\n eirp 8",
+    "des": "在AC的无线电1上配置20MHz的信道3和EIRP为8。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组配置",
+    "config": "ap-group name ap-group2\n regulatory-domain-profile domain2",
+    "des": "在AC上创建名为ap-group2的AP组，并关联名为domain2的监管域模板。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 102 type-id 47 ap-mac 60de-4476-e321 ap-sn 210235419610CB002379\n ap-name ap-102\n ap-group ap-group2",
+    "des": "在AC上将ID为102、MAC地址为60de-4476-e321的AP上线，并分配到ap-group2组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频配置",
+    "config": "radio 1\n calibrate auto-channel-select disable\n calibrate auto-txpower-select disable",
+    "des": "在AC的无线电1上禁用自动信道选择和自动传输功率选择功能。"
+  },
+  {
+    "device": "AC",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif400\n ip address 10.23.400.2 255.255.255.0",
+    "des": "为AC上的Vlanif400接口分配IP地址10.23.400.2和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN流量隔离配置",
+    "config": "traffic-profile name traffic2\n user-isolate enable",
+    "des": "在AC上创建名为traffic2的流量模板，并启用用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID模板配置",
+    "config": "ssid-profile name wlan-ssid3\n ssid school-wlan",
+    "des": "在AC上创建名为wlan-ssid3的SSID模板，并设置SSID为school-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP服务VLAN配置",
+    "config": "vap-profile name wlan-vap3\n service-vlan vlan-id 103",
+    "des": "在AC上创建名为wlan-vap3的VAP模板，设置服务VLAN为103。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组射频信道配置",
+    "config": "ap-group name ap-group3\n radio 0\n calibrate auto-channel-select disable",
+    "des": "在AC上为ap-group3的无线电0禁用自动信道选择。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 103\n ap-name ap-103\n ap-group ap-group3",
+    "des": "在AC上将ID为103的AP上线，并命名为ap-103，同时分配到ap-group3组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频功率配置",
+    "config": "radio 0\n eirp 12",
+    "des": "在AC的无线电0上设置EIRP为12。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "交换机端口配置",
+    "config": "interface GigabitEthernet0/0/2\n port link-type trunk\n port trunk allow-pass vlan 200 300",
+    "des": "在S5700-2的GigabitEthernet0/0/2接口上配置为trunk模式，并允许VLAN 200和300通过。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "端口默认VLAN配置",
+    "config": "port trunk pvid vlan 200",
+    "des": "在S5700-2的端口上设置默认VLAN（PVID）为200。"
+  },
+  {
+    "device": "S5700-2",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 3",
+    "des": "在S5700-2的端口上启用端口隔离，并分配到隔离组3。"
+  },
+  {
+    "device": "AC",
+    "type": "VLAN配置",
+    "config": "vlan batch 200 to 203 300 to 303 600",
+    "des": "在AC上创建VLAN 200至203和VLAN 300至303以及VLAN 600。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP服务禁用",
+    "config": "undo dhcp enable",
+    "des": "在AC上禁用DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "RADIUS服务器模板配置",
+    "config": "radius-server template radius3\n radius-server shared-key cipher %^%#NewSharedKey2%^%",
+    "des": "在AC上创建名为radius3的RADIUS服务器模板，并设置新的共享密钥。"
+  },
+  {
+    "device": "AC",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif500\n ip address 192.168.500.1 255.255.255.0",
+    "des": "为AC上的Vlanif500接口分配IP地址192.168.500.1和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP选择接口配置",
+    "config": "undo dhcp select interface",
+    "des": "在AC的Vlanif接口上取消使用接口地址池进行DHCP服务。"
+  },
+  {
+    "device": "AC",
+    "type": "Portal认证配置",
+    "config": "portal-access-profile portal3\n web-auth-server portal3 ldap",
+    "des": "在AC上创建名为portal3的Portal访问配置，并绑定名为portal3的Portal服务器模板。"
+  },
+  {
+    "device": "AC",
+    "type": "用户隔离配置",
+    "config": "traffic-profile name traffic3\n user-isolate disable",
+    "des": "在AC上创建名为traffic3的流量模板，并取消二层用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID配置",
+    "config": "ssid-profile name wlan-ssid4\n ssid cafe-wlan",
+    "des": "在AC上创建名为wlan-ssid4的SSID模板，并设置SSID名称为cafe-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板配置",
+    "config": "vap-profile name wlan-vap4\n forward-mode bridge\n service-vlan vlan-id 104",
+    "des": "在AC上创建名为wlan-vap4的VAP模板，设置业务转发模式为桥接转发，服务VLAN为104。"
+  },
+  {
+    "device": "AC",
+    "type": "射频信道和功率配置",
+    "config": "radio 2\n channel 40mhz 5\n eirp 6",
+    "des": "在AC的无线电2上配置40MHz的信道5和EIRP为6。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组配置",
+    "config": "ap-group name ap-group4\n regulatory-domain-profile domain3",
+    "des": "在AC上创建名为ap-group4的AP组，并关联名为domain3的监管域模板。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 104 type-id 48 ap-mac 60de-4476-e322 ap-sn 210235419610CB002380\n ap-name ap-104\n ap-group ap-group4",
+    "des": "在AC上将ID为104、MAC地址为60de-4476-e322的AP上线，并分配到ap-group4组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频配置",
+    "config": "radio 2\n calibrate auto-channel-select enable\n calibrate auto-txpower-select enable",
+    "des": "在AC的无线电2上启用自动信道选择和自动传输功率选择功能。"
+  },
+  {
+    "device": "AC",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif600\n ip address 10.23.600.2 255.255.255.0",
+    "des": "为AC上的Vlanif600接口分配IP地址10.23.600.2和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN流量隔离配置",
+    "config": "traffic-profile name traffic3\n user-isolate disable",
+    "des": "在AC上创建名为traffic3的流量模板，并取消用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID模板配置",
+    "config": "ssid-profile name wlan-ssid5\n ssid hotel-wlan",
+    "des": "在AC上创建名为wlan-ssid5的SSID模板，并设置SSID为hotel-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP服务VLAN配置",
+    "config": "vap-profile name wlan-vap5\n service-vlan vlan-id 105",
+    "des": "在AC上创建名为wlan-vap5的VAP模板，设置服务VLAN为105。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组射频信道配置",
+    "config": "ap-group name ap-group5\n radio 1\n calibrate auto-channel-select enable",
+    "des": "在AC上为ap-group5的无线电1启用自动信道选择。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 105\n ap-name ap-105\n ap-group ap-group5",
+    "des": "在AC上将ID为105的AP上线，并命名为ap-105，同时分配到ap-group5组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频功率配置",
+    "config": "radio 1\n eirp 14",
+    "des": "在AC的无线电1上设置EIRP为14。"
+  },
+  {
+    "device": "S5700-3",
+    "type": "交换机端口配置",
+    "config": "interface GigabitEthernet0/0/3\n port link-type access\n port access vlan 500",
+    "des": "在S5700-3的GigabitEthernet0/0/3接口上配置为access模式，并设置VLAN 500。"
+  },
+  {
+    "device": "S5700-3",
+    "type": "端口默认VLAN配置",
+    "config": "port default vlan 501",
+    "des": "在S5700-3的端口上设置默认VLAN为501。"
+  },
+  {
+    "device": "S5700-3",
+    "type": "端口隔离配置",
+    "config": "port-isolate enable group 4",
+    "des": "在S5700-3的端口上启用端口隔离，并分配到隔离组4。"
+  },
+  {
+    "device": "AC",
+    "type": "VLAN配置",
+    "config": "vlan batch 500 to 502 600 to 605",
+    "des": "在AC上创建VLAN 500至502和VLAN 600至605。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP服务配置",
+    "config": "dhcp select profile dhcp-profile",
+    "des": "在AC上使用名为dhcp-profile的DHCP配置文件。"
+  },
+  {
+    "device": "AC",
+    "type": "RADIUS服务器模板配置",
+    "config": "radius-server template radius4\n radius-server authentication-port 1812\n radius-server shared-key cipher %^%#AuthKey%^%",
+    "des": "在AC上创建名为radius4的RADIUS服务器模板，并设置认证端口和共享密钥。"
+  },
+  {
+    "device": "AC",
+    "type": "接口IP地址配置",
+    "config": "interface Vlanif501\n ip address 192.168.501.1 255.255.255.0",
+    "des": "为AC上的Vlanif501接口分配IP地址192.168.501.1和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "DHCP中继配置",
+    "config": "dhcp relay server-group server-group1\n dhcp relay server server1 10.23.100.10",
+    "des": "在AC上为DHCP中继配置服务器组server-group1，并添加服务器server1。"
+  },
+  {
+    "device": "AC",
+    "type": "Portal认证配置",
+    "config": "portal-access-profile portal4\n web-auth-server portal4 radius",
+    "des": "在AC上创建名为portal4的Portal访问配置，并绑定到RADIUS认证。"
+  },
+  {
+    "device": "AC",
+    "type": "用户隔离配置",
+    "config": "traffic-profile name traffic4\n user-isolate l3",
+    "des": "在AC上创建名为traffic4的流量模板，并启用三层用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID配置",
+    "config": "ssid-profile name wlan-ssid6\n ssid airport-wlan",
+    "des": "在AC上创建名为wlan-ssid6的SSID模板，并设置SSID名称为airport-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP模板配置",
+    "config": "vap-profile name wlan-vap6\n forward-mode route\n service-vlan vlan-id 106",
+    "des": "在AC上创建名为wlan-vap6的VAP模板，设置业务转发模式为路由转发，服务VLAN为106。"
+  },
+  {
+    "device": "AC",
+    "type": "射频信道和功率配置",
+    "config": "radio 3\n channel 80mhz 6\n eirp 5",
+    "des": "在AC的无线电3上配置80MHz的信道6和EIRP为5。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组配置",
+    "config": "ap-group name ap-group6\n regulatory-domain-profile domain4",
+    "des": "在AC上创建名为ap-group6的AP组，并关联名为domain4的监管域模板。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 106\n ap-name ap-106\n ap-group ap-group6",
+    "des": "在AC上将ID为106的AP上线，并命名为ap-106，同时分配到ap-group6组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频配置",
+    "config": "radio 3\n calibrate auto-channel-select enable",
+    "des": "在AC的无线电3上启用自动信道选择功能。"
+  },
+  {
+    "device": "AC",
+    "type": "接口VLAN配置",
+    "config": "interface Vlanif502\n ip address 192.168.502.1 255.255.255.0",
+    "des": "为AC上的Vlanif502接口分配IP地址192.168.502.1和子网掩码255.255.255.0。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN流量隔离配置",
+    "config": "traffic-profile name traffic5\n user-isolate disable",
+    "des": "在AC上创建名为traffic5的流量模板，并取消用户隔离。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID模板配置",
+    "config": "ssid-profile name wlan-ssid7\n ssid stadium-wlan",
+    "des": "在AC上创建名为wlan-ssid7的SSID模板，并设置SSID为stadium-wlan。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP服务VLAN配置",
+    "config": "vap-profile name wlan-vap7\n service-vlan vlan-id 107",
+    "des": "在AC上创建名为wlan-vap7的VAP模板，设置服务VLAN为107。"
+  },
+  {
+    "device": "AC",
+    "type": "AP组射频信道配置",
+    "config": "ap-group name ap-group7\n radio 2\n calibrate auto-channel-select disable",
+    "des": "在AC上为ap-group7的无线电2禁用自动信道选择。"
+  },
+  {
+    "device": "AC",
+    "type": "AP上线配置",
+    "config": "ap-id 107\n ap-name ap-107\n ap-group ap-group7",
+    "des": "在AC上将ID为107的AP上线，并命名为ap-107，同时分配到ap-group7组。"
+  },
+  {
+    "device": "AC",
+    "type": "AP射频功率配置",
+    "config": "radio 2\n eirp 16",
+    "des": "在AC的无线电2上设置EIRP为16。"
+  },
+  {
+    "device": "AC",
+    "type": "WLAN安全模板配置",
+    "config": "security-profile name wlan-security2\n security wpa2-enterprise",
+    "des": "在AC上创建名为wlan-security2的安全模板，并设置安全策略为WPA2-Enterprise。"
+  },
+  {
+    "device": "AC",
+    "type": "SSID广播配置",
+    "config": "ssid-profile name wlan-ssid8\n broadcast disable",
+    "des": "在AC上创建名为wlan-ssid8的SSID模板，并禁用SSID的广播。"
+  },
+  {
+    "device": "AC",
+    "type": "VAP业务VLAN配置",
+    "config": "vap-profile name wlan-vap8\n service-vlan vlan-id 108",
+    "des": "在AC上创建名为wlan-vap8的VAP模板，设置业务VLAN为108。"
+  }
+]

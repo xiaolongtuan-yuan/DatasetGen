@@ -1,0 +1,20 @@
+package networks;
+
+import node.Node;
+import inet.common.misc.ThruputMeteringChannel;
+
+network Myned{}
+{{
+     parameters:
+    	string routingTableString;
+    types:
+        {}
+    submodules:
+        rte[{}]: Node {{
+            parameters:
+                routingTableString = parent.routingTableString; // 传递参数
+        }}
+    connections allowunconnected:
+        {}
+}}
+
