@@ -318,6 +318,7 @@ class BgpBuilder:
         edge_str = '\n        '.join(edge_str_list)
         ned_str = ned_template.format(str(self.net_seq), channel_str, str(num_nodes), edge_str)
 
+        os.makedirs(os.path.join("omnet_file", "networks"), exist_ok=True)
         with open(os.path.join("omnet_file", "networks", f"Myned{str(self.net_seq)}.ned"), 'w') as f:
             f.write(ned_str)
 
@@ -339,6 +340,7 @@ class BgpBuilder:
         ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str, node_type_str,
                                     dest_str)
 
+        os.makedirs(os.path.join("omnet_file", "ini_dir"), exist_ok=True)
         with open(os.path.join("omnet_file", "ini_dir", f"omnetpp{str(self.net_seq)}.ini"), "w") as ini_file:
             ini_file.write(ini_str)
 
