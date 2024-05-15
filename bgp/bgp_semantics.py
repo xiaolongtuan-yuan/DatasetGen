@@ -676,7 +676,7 @@ def compute_forwarding_state(g: DiGraph):  # 计算转发表
             else:
                 next_router = n
 
-        # # todo 记得删，这里是测试是否存在路由环路的
+        # #
         # for src, dst in ospf_edges + ebgp_edges:
         #     if net in g[src][dst]["is_forwarding"].keys() and net in g[dst][src]["is_forwarding"].keys():
         #         if g[src][dst]["is_forwarding"][net] == g[dst][src]["is_forwarding"][net]:

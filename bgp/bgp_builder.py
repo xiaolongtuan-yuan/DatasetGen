@@ -287,7 +287,7 @@ class BgpBuilder:
         }
         return channel_name, channel_attribute_str, channel_attribute
 
-    def gen_ned_file(self):  # todo，定义channel，应用channel
+    def gen_ned_file(self):
         edge_tem = 'rte[{}].port[{}] <--> {} <--> rte[{}].port[{}];'  # 中间的channel要大变
         with open("resource/ned_template.txt", 'r') as ned_file:
             ned_template = ned_file.read()
