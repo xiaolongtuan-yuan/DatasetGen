@@ -337,7 +337,7 @@ class BgpBuilder:
         node_type_str = '\n'.join(node_info)
         net_node = [str(n) for n in self.G.nodes if self.G.nodes[n]['type'] == 'network']
         dest_str = ' '.join(net_node)
-        ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str, node_type_str,
+        ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str, str(self.net_seq), str(self.net_seq), node_type_str,
                                     dest_str)
 
         os.makedirs(os.path.join("omnet_file", "ini_dir"), exist_ok=True)

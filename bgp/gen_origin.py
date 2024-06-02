@@ -19,7 +19,7 @@ def choose_random(arr, s=None):
     return arr[idx]
 
 
-total_account = 10
+total_account = 20
 
 if __name__ == '__main__':
     seed = os.getpid()

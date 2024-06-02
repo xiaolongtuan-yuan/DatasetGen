@@ -126,3 +126,5 @@ class Device:
             "prefix": prefix,
             "mask": mask
         })  # 记录要宣告的网络
+
+        return interface.seq

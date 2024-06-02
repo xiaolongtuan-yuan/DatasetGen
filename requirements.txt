@@ -4,6 +4,7 @@ numpy
 transformers
 datasets
 pandas
-ogb
 scikit-learn
 tqdm
+torch
+scipy
