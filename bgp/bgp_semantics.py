@@ -127,9 +127,10 @@ def lowest(routes, prop_fct):
 
 
 def generate_random_route_announcements(destination, ROUTES_PER_CATEGORY=2, ROUTES_IN_LAST_CATEGORY=3):
+    # 可设置的参数有local_preference和med
     announcements = []
     for i in range(ROUTES_PER_CATEGORY):
-        LP = np.random.randint(0, 10)
+        LP = np.random.randint(0, 10) * 10
         announcements.append(generate_random_route_announcement(destination, LOCAL_PREF=LP))
     LOCAL_PREF = -lowest(announcements, lambda r: -r.local_preference)  # 最小local_preference
 
@@ -140,7 +141,7 @@ def generate_random_route_announcements(destination, ROUTES_PER_CATEGORY=2, ROUT
     AS_PATH_LENGTH = lowest(announcements, lambda r: r.as_path_length)
 
     for i in range(ROUTES_PER_CATEGORY):
-        M = np.random.randint(0, 30)
+        M = np.random.randint(0, 10)
         announcements.append(
             generate_random_route_announcement(destination, LOCAL_PREF=LOCAL_PREF, AS_PATH_LENGTH=AS_PATH_LENGTH,
                                                MED=M))
@@ -255,6 +256,7 @@ def generate_graph_with_topology(filename, seed, NUM_NODES=None, NUM_NETWORKS=No
 def generate_graph(seed, NUM_NODES=None, NUM_NETWORKS=None, NUM_GATEWAY_NODES=None, NUM_ROUTE_REFLECTORS=None,
                    NUM_ACL_ROLE=None,
                    FULLY_MESHED=False, MAX_INTERFACE = 4):
+    # 生成网络建模图，其中包括各种参数，权重，bgproute等
     if NUM_NODES is None: NUM_NODES = 10
     if NUM_NETWORKS is None: NUM_NETWORKS = 2
     if NUM_GATEWAY_NODES is None: NUM_GATEWAY_NODES = min(int(NUM_NODES / 2), 4)
@@ -710,7 +712,7 @@ class BgpSemantics(Semantics):
         self.predicate_semantics = [
             ForwardingPathPredicateSemantics(),
             # FullForwardingPlanePredicateSemantics(),
-            TrafficIsolationPredicateSemantics(),
+            # TrafficIsolationPredicateSemantics(),
             ReachablePredicateSemantics()
         ]
         self.predicate_semantics_sample_config = {
@@ -726,44 +728,44 @@ class BgpSemantics(Semantics):
         }
         self.labeled_networks = labeled_networks
 
-    def sample(self, num_nodes=None, num_networks=None, NUM_GATEWAY_NODES=None, seed=None, real_world_topology=False,
+    def sample(self, num_nodes=None, num_networks=None, NUM_GATEWAY_NODES=None, NUM_ACL_ROLE=None, seed=None, real_world_topology=False,
                skip_fwd_facts_p=0.0,
                predicate_semantics_sample_config_overrides={}, basedOnGraph=None, FULLY_MESHED=False,
                use_topology_file=None, MAX_INTERFACE = 4):
         s = np.random.RandomState(seed=seed)
 
         if basedOnGraph is not None:
-            graph = basedOnGraph
+            self.graph = basedOnGraph
         elif not real_world_topology:  # 生成随机拓扑
-            graph = generate_graph(seed=seed, NUM_NODES=num_nodes, NUM_NETWORKS=num_networks,
-                                   NUM_GATEWAY_NODES=NUM_GATEWAY_NODES, FULLY_MESHED=FULLY_MESHED, MAX_INTERFACE = MAX_INTERFACE)
+            self.graph = generate_graph(seed=seed, NUM_NODES=num_nodes, NUM_NETWORKS=num_networks,
+                                   NUM_GATEWAY_NODES=NUM_GATEWAY_NODES, NUM_ACL_ROLE=NUM_ACL_ROLE, FULLY_MESHED=FULLY_MESHED, MAX_INTERFACE = MAX_INTERFACE)
 
         else:
             topology_file = choose_random(topologies.all_topology_files, s=s)
             if use_topology_file is not None: topology_file = use_topology_file
-            graph = generate_graph_with_topology(topology_file, seed=seed, NUM_NETWORKS=num_networks,
+            self.graph = generate_graph_with_topology(topology_file, seed=seed, NUM_NETWORKS=num_networks,
                                                  NUM_GATEWAY_NODES=NUM_GATEWAY_NODES, FULLY_MESHED=FULLY_MESHED)
-            num_nodes = len(graph.nodes())
+            num_nodes = len(self.graph.nodes())
 
-        router_nodes = [n for n in graph.nodes() if graph.nodes[n]["type"] == "router"]
-        network_nodes = [n for n in graph.nodes() if graph.nodes[n]["type"] == "network"]
-        external_nodes = [n for n in graph.nodes() if graph.nodes[n]["type"] == "external"]
-        route_reflector_nodes = [n for n in graph.nodes() if graph.nodes[n]["type"] == "route_reflector"]
+        router_nodes = [n for n in self.graph.nodes() if self.graph.nodes[n]["type"] == "router"]
+        network_nodes = [n for n in self.graph.nodes() if self.graph.nodes[n]["type"] == "network"]
+        external_nodes = [n for n in self.graph.nodes() if self.graph.nodes[n]["type"] == "external"]
+        route_reflector_nodes = [n for n in self.graph.nodes() if self.graph.nodes[n]["type"] == "route_reflector"]
 
         def c(r):
             return Constant(f"c{r}")
 
         # mapping of traffic classes / networks
-        network_mapping = {}
+        self.network_mapping = {}
         for n in network_nodes:
-            network_mapping[c(n).name] = len(network_mapping)
+            self.network_mapping[c(n).name] = len(self.network_mapping)
 
         # set names in network graph
-        for n in graph.nodes():
-            graph.nodes[n]["label"] = c(n).name
+        for n in self.graph.nodes():
+            self.graph.nodes[n]["label"] = c(n).name
 
         # compute forwarding state
-        compute_forwarding_state(graph)
+        compute_forwarding_state(self.graph)
 
         def get_overrides(pred_s):
             if pred_s.predicate_name in predicate_semantics_sample_config_overrides.keys():
@@ -776,18 +778,18 @@ class BgpSemantics(Semantics):
         # 从计算的转发平面派生规范谓词
         for pred_s in self.predicate_semantics:
             config = self.sampling_config(pred_s, overrides=get_overrides(pred_s))  # config就是一个谓词抽样的个数 {"n": 10}
-            derived = pred_s.sample(graph, random=s, **config)
+            derived = pred_s.sample(self.graph, random=s, **config)
 
             if self.labeled_networks:
                 for f in derived:
                     def network_constants_to_label(a):
-                        if type(a) is Constant and a.name in network_mapping.keys(): return network_mapping[a.name]
+                        if type(a) is Constant and a.name in self.network_mapping.keys(): return self.network_mapping[a.name]
                         return a
 
                     f.args = [network_constants_to_label(a) for a in f.args]
 
             facts += derived
-        return graph, facts
+        return self.graph, facts
 
     def sampling_config(self, predicate_semantics, overrides={}):
         if predicate_semantics.predicate_name in self.predicate_semantics_sample_config.keys():

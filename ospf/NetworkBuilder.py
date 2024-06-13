@@ -62,8 +62,19 @@ class NetworkBuilder:
     def __init__(self, device_account, network_root, need_embeded=False, is_Di=True):
         self.device_account = device_account
         self.network_root = network_root
+        self.need_embeded = need_embeded
+        self.is_Di = is_Di  # 有向图
+        self.builder_init()
 
-        path_items = network_root.split('/')
+        self.node_dst_map = {}  # 每个节点只向一个目的地发包
+        self.weight_matrix = None
+        self.max_weight = 1000
+        self.ip_distributor = IpDistributor()
+
+
+
+    def builder_init(self):
+        path_items = self.network_root.split('/')
         self.dataset_dir = path_items[0]
         self.net_scale = path_items[-2]
         self.net_seq = path_items[-1]
@@ -77,13 +88,7 @@ class NetworkBuilder:
         if not os.path.exists(os.path.join(self.dataset_dir, "omnet_file", self.net_scale, "networks")):
             os.makedirs(os.path.join(self.dataset_dir, "omnet_file", self.net_scale, "networks"))
             os.makedirs(os.path.join(self.dataset_dir, "omnet_file", self.net_scale, "ini_dir"))
-        self.ip_distributor = IpDistributor()
-        self.need_embeded = need_embeded
-        self.max_weight = 1000
-        self.weight_matrix = None
-        self.is_Di = is_Di  # 有向图
         self.channel_num = 0
-        self.node_dst_map = {}  # 每个节点只向一个目的地发包
 
     def random_planar_graph(self, num_nodes, MAX_INTERFACE=10):
         random_state = np.random.RandomState()
@@ -105,6 +110,8 @@ class NetworkBuilder:
             add_edge(tri[2], tri[0])
 
         return G
+
+
 
     def build_graph(self):  # 节点从0开始
         # self.G = nx.DiGraph() if self.is_Di else nx.Graph()  # 有向图
@@ -156,16 +163,16 @@ class NetworkBuilder:
 
         node_color = ["lightblue"] * len(G.nodes())
 
-        interface_pos = {}
+        # interface_pos = {}
         interface_labe = {}
         for edge in G.edges():
             u, v = edge
             x1, y1 = pos[u]
             x2, y2 = pos[v]
-            out_pos = (x1 + (x2 - x1) / 6, y1 + (y2 - y1) / 6)
+            # out_pos = (x1 + (x2 - x1) / 6, y1 + (y2 - y1) / 6)
 
             interface_labe[edge] = G.edges[u, v]['interface_info']['out']
-            interface_pos[edge] = out_pos
+            # interface_pos[edge] = out_pos
 
         fig = plt.Figure(figsize=figsize)
         canvas = FigureCanvas(fig)
@@ -176,7 +183,7 @@ class NetworkBuilder:
             return G.nodes[n]['device'].host_name
 
         nx.draw_networkx_nodes(G, pos, node_color=node_color, ax=ax)
-        nx.draw_networkx_edge_labels(G, label_pos=0.8, pos=pos, edge_labels=interface_labe, ax=ax)
+        nx.draw_networkx_edge_labels(G, label_pos=0.2, pos=pos, edge_labels=interface_labe, ax=ax)
         nx.draw_networkx_labels(G, labels=dict([(n, node_label(n)) for n in G.nodes()]), pos=pos, ax=ax)
         filtered_edges = [(u, v) for u, v, d in G.edges(data=True)]
         nx.draw_networkx_edges(G, pos, edgelist=filtered_edges, ax=ax)

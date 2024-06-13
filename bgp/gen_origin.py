@@ -48,6 +48,8 @@ if __name__ == '__main__':
         builder.build_graph(num_nodes, real_world_topology, num_networks, sample_config_overrides, seed,
                             num_gateway_nodes,max_interface=8)
         # builder.draw_grap()
+
+
         # 使用graph_model建立配置文件
         builder.gen_config()
         builder.gen_ned_file()

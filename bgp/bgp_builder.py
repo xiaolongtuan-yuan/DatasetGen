@@ -16,7 +16,8 @@ import pandas as pd
 from torch_geometric.data import Data
 import numpy as np
 
-from bgp_semantics import BgpSemantics, draw_graph, draw_dev_graph
+from bgp.predicate_semantics import Constant
+from bgp_semantics import BgpSemantics, draw_graph, draw_dev_graph, compute_forwarding_state
 from bgp_device import *
 import networkx as nx
 from networkx import spring_layout
@@ -76,15 +77,18 @@ class BgpBuilder:
         self.device_AS_map = {}
         self.net_seq = net_seq
         self.channel_num = 0
+        self.MAX_WEIGHT = 32
+        self.node_dst_map = {}
 
     def build_graph(self, num_nodes, real_world_topology, num_networks, sample_config_overrides, seed,
-                    num_gateway_nodes, max_interface=4):  # 节点从0开始
-        bgp_semantics = BgpSemantics()
-        self.G, self.facts = bgp_semantics.sample(num_nodes=num_nodes, real_world_topology=real_world_topology,
-                                                  num_networks=num_networks,
-                                                  predicate_semantics_sample_config_overrides=sample_config_overrides,
-                                                  seed=seed, NUM_GATEWAY_NODES=num_gateway_nodes,
-                                                  MAX_INTERFACE=max_interface)
+                    num_gateway_nodes, mun_acl_role, max_interface=4):  # 节点从0开始
+        self.seed = seed
+        self.bgp_semantics = BgpSemantics()
+        self.G, self.facts = self.bgp_semantics.sample(num_nodes=num_nodes, real_world_topology=real_world_topology,
+                                                       num_networks=num_networks,
+                                                       predicate_semantics_sample_config_overrides=sample_config_overrides,
+                                                       seed=seed, NUM_GATEWAY_NODES=num_gateway_nodes,NUM_ACL_ROLE=mun_acl_role,
+                                                       MAX_INTERFACE=max_interface)
         node_list = list(self.G.nodes())
         for n in node_list:
             if self.G.nodes[n]['type'] == 'network':
@@ -108,6 +112,35 @@ class BgpBuilder:
                                                           device_type=Device_type.ROUTER, AS_num=1)
         self.address_distribution()
 
+    def drive_facts(self, predicate_semantics_sample_config_overrides):
+        s = np.random.RandomState(seed=self.seed)
+
+        def get_overrides(pred_s):
+            if pred_s.predicate_name in predicate_semantics_sample_config_overrides.keys():
+                return predicate_semantics_sample_config_overrides[
+                    pred_s.predicate_name]  # {"n": choose_random([8, 10, 12], s)}
+            return {}
+
+        facts = []
+
+        # 从计算的转发平面派生规范谓词
+        for pred_s in self.bgp_semantics.predicate_semantics:
+            config = self.bgp_semantics.sampling_config(pred_s, overrides=get_overrides(
+                pred_s))  # config就是一个谓词抽样的个数 {"n": 10}
+            derived = pred_s.sample(self.G, random=s, **config)
+
+            if self.bgp_semantics.labeled_networks:
+                for f in derived:
+                    def network_constants_to_label(a):
+                        if type(a) is Constant and a.name in self.bgp_semantics.network_mapping.keys(): return \
+                            self.bgp_semantics.network_mapping[a.name]
+                        return a
+
+                    f.args = [network_constants_to_label(a) for a in f.args]
+            facts += derived
+
+        return facts
+
     def get_route_table(self):
         route_table = np.full((len(self.G.nodes), len(self.G.nodes)), -1)
         for node1, node2, data in self.G.edges(data=True):
@@ -118,6 +151,90 @@ class BgpBuilder:
                 route_table[node1][node2] = data['interface_info']['out']
         np.savetxt(os.path.join(self.network_root, 'route_table.txt'), route_table, fmt='%d')
         return route_table
+
+    def get_forward_table(self):
+        self.forward_table = np.full((len(self.G.nodes), len(self.G.nodes)), -1)
+        for node1, node2, data in self.G.edges(data=True):
+            if "is_forwarding" in data.keys():
+                for net in data['is_forwarding'].keys():
+                    self.forward_table[node1][net] = node2  # 出端口
+            if data['type'] == 'network' and self.G.nodes[node1]['type'] == 'external':
+                self.forward_table[node1][node2] = node2
+        np.savetxt(os.path.join(self.network_root, 'forward_table.txt'), self.forward_table, fmt='%d')
+        return self.forward_table
+
+    def random_data(self):
+        old_forward_table = self.get_forward_table()
+        num_edges = len(self.G.edges())
+
+        update_record = []
+        while True:
+            change_edges = random.sample(list(self.G.edges(data=True)), math.ceil(num_edges * 0.05))  # 采样20分之一的边改变
+            for u, v, data in change_edges:
+                if 'weight' in data:
+                    old_value = {
+                        'cost': data['weight']
+                    }
+                    weight_int = random.randint(1, self.MAX_WEIGHT)  # 随机权重整数
+                    data['weight'] = weight_int
+                    update_record.append(
+                        {
+                            'type': 'ospf_weight',
+                            'location': (u, v),
+                            'old_value': old_value,
+                            'new_value': {
+                                'cost': weight_int
+                            }
+                        }
+                    )
+                    # self.weight_matrix[u][v] = weight_int
+
+            external_nodes = [n for n in self.G.nodes() if self.G.nodes[n]["type"] == "external"]
+            changed_external = random.sample(external_nodes, math.ceil(len(external_nodes) // 4))
+
+            for external_node in changed_external:
+                bgp_route = self.G.nodes[external_node]["bgp_route"]
+                old_value = {
+                    'local_preference': bgp_route.local_preference,
+                    'med': bgp_route.med
+                }
+
+                bgp_route.local_preference = np.random.randint(0, 10) * 10
+                bgp_route.med = np.random.randint(0, 10)
+
+                update_record.append({
+                    'type': 'bgp_route',
+                    'location': external_node,
+                    'old_value': old_value,
+                    'new_value': {
+                        'local_preference': bgp_route.local_preference,
+                        'med': bgp_route.med
+                    }
+                })
+            compute_forwarding_state(self.G)
+            new_forward_table = self.get_forward_table()
+            if not np.array_equal(old_forward_table, new_forward_table):  # 如果转发平面未发生变化，则重新改变权重
+                break
+        # 刷新网络快照
+        path_changed_node_pairs = {}
+        net_node = [n for n in self.G.nodes if self.G.nodes[n]['type'] == 'network']
+        router_node = [n for n in self.G.nodes if self.G.nodes[n]['type'] == 'router' or self.G.nodes[n][
+            'type'] == 'route_reflector']  # router, route_reflector
+        for i in router_node:  # 起始节点
+            path_changed_node_pairs[i] = []
+            for j in net_node:
+                if not old_forward_table[i, j] == new_forward_table[i, j]:
+                    path_changed_node_pairs[i].append(j)
+            if len(path_changed_node_pairs[i]) == 0:  # 随机选择目的地节点，切changed=0
+                dst = i
+                while dst == i:
+                    dst = random.sample(list(net_node), 1)[0]
+                self.node_dst_map[i] = dst
+            else:
+                dst = random.sample(path_changed_node_pairs[i], 1)[0]
+                self.node_dst_map[i] = dst
+
+        return update_record
 
     def draw_grap(self):
         canvas0 = draw_graph(self.G)
@@ -255,13 +372,6 @@ class BgpBuilder:
             device = self.G.nodes[node]['device']
             device.make_config_file(self.network_root, False)
 
-        with open(os.path.join(str(self.network_root), "facts.txt"), "w") as fact_file:
-            fact_str = '\n'.join([f.__repr__() for f in self.facts])
-            fact_file.write(fact_str)
-
-        with open(os.path.join(str(self.network_root), "facts.pkl"), 'wb') as f:
-            pickle.dump(self.facts, f)
-
     def channel_register(self):
         delay_leval = [['1ms', '10ms', '20ms'], ['40ms', '80ms', '150ms'], ['200ms', '400ms', '1s']]  # 低，中，高延迟
         data_rate_leval = [['20kbps', '100kbps', '500kbps'], ['1Mbps', '5Mbps', '25Mbps'],
@@ -334,12 +444,14 @@ class BgpBuilder:
         for n in self.G.nodes:
             node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].appType = \"{self.G.nodes[n]['type']}\"")
             node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].address = {n}")
-        node_type_str = '\n'.join(node_info)
-        net_node = [str(n) for n in self.G.nodes if self.G.nodes[n]['type'] == 'network']
-        dest_str = ' '.join(net_node)
-        ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str, str(self.net_seq), str(self.net_seq), node_type_str,
-                                    dest_str)
+            if n in self.node_dst_map:
+                node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].destAddresses = \"{self.node_dst_map[n]}\"")
+            else:
+                node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].destAddresses = \"{n}\"")
 
+        node_type_str = '\n'.join(node_info)
+        ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str,
+                                    str(self.net_seq), str(self.net_seq), node_type_str)
         os.makedirs(os.path.join("omnet_file", "ini_dir"), exist_ok=True)
         with open(os.path.join("omnet_file", "ini_dir", f"omnetpp{str(self.net_seq)}.ini"), "w") as ini_file:
             ini_file.write(ini_str)
@@ -460,24 +572,6 @@ class BgpBuilder:
             return query, answer, json.dumps(label_list)
         else:
             raise Exception("不存在的query_type!")
-
-    def random_weight(self):
-        # 随机权重矩阵,只更新0.5边
-        if self.weight_matrix is None:
-            self.weight_matrix = np.full((self.device_account, self.device_account), np.inf)
-            for u, v, data in self.G.edges(data=True):
-                weight_int = random.randint(1, self.max_weight)  # 随机权重整数
-                data['weight'] = weight_int
-                self.weight_matrix[u][v] = weight_int
-            return self.weight_matrix
-
-        num_edges = len(self.G.edges())
-        change_edges = random.sample(list(self.G.edges(data=True)), math.ceil(num_edges * 0.5))  # 采样十分之一的边改变
-        for u, v, data in change_edges:
-            weight_int = random.randint(1, self.max_weight)  # 随机权重整数
-            data['weight'] = weight_int
-            self.weight_matrix[u][v] = weight_int
-        return self.weight_matrix
 
 
 if __name__ == '__main__':
