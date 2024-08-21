@@ -712,7 +712,7 @@ class BgpSemantics(Semantics):
         self.predicate_semantics = [
             ForwardingPathPredicateSemantics(),
             # FullForwardingPlanePredicateSemantics(),
-            # TrafficIsolationPredicateSemantics(),
+            TrafficIsolationPredicateSemantics(),
             ReachablePredicateSemantics()
         ]
         self.predicate_semantics_sample_config = {

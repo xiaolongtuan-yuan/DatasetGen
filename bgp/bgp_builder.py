@@ -87,7 +87,8 @@ class BgpBuilder:
         self.G, self.facts = self.bgp_semantics.sample(num_nodes=num_nodes, real_world_topology=real_world_topology,
                                                        num_networks=num_networks,
                                                        predicate_semantics_sample_config_overrides=sample_config_overrides,
-                                                       seed=seed, NUM_GATEWAY_NODES=num_gateway_nodes,NUM_ACL_ROLE=mun_acl_role,
+                                                       seed=seed, NUM_GATEWAY_NODES=num_gateway_nodes,
+                                                       NUM_ACL_ROLE=mun_acl_role,
                                                        MAX_INTERFACE=max_interface)
         node_list = list(self.G.nodes())
         for n in node_list:
@@ -127,7 +128,7 @@ class BgpBuilder:
         for pred_s in self.bgp_semantics.predicate_semantics:
             config = self.bgp_semantics.sampling_config(pred_s, overrides=get_overrides(
                 pred_s))  # config就是一个谓词抽样的个数 {"n": 10}
-            derived = pred_s.sample(self.G, random=s, **config)
+            derived = pred_s.sample(self.G, random=s, per_network=False, **config)
 
             if self.bgp_semantics.labeled_networks:
                 for f in derived:
@@ -167,7 +168,7 @@ class BgpBuilder:
         old_forward_table = self.get_forward_table()
         num_edges = len(self.G.edges())
 
-        update_record = []
+        update_record = {'ospf': [], 'bgp_route': []}
         while True:
             change_edges = random.sample(list(self.G.edges(data=True)), math.ceil(num_edges * 0.05))  # 采样20分之一的边改变
             for u, v, data in change_edges:
@@ -177,17 +178,17 @@ class BgpBuilder:
                     }
                     weight_int = random.randint(1, self.MAX_WEIGHT)  # 随机权重整数
                     data['weight'] = weight_int
-                    update_record.append(
-                        {
-                            'type': 'ospf_weight',
-                            'location': (u, v),
-                            'old_value': old_value,
-                            'new_value': {
-                                'cost': weight_int
-                            }
-                        }
-                    )
-                    # self.weight_matrix[u][v] = weight_int
+                    # update_record.append(
+                    #     {
+                    #         'type': 'ospf_weight',
+                    #         'location': (u, v),
+                    #         'old_value': old_value,
+                    #         'new_value': {
+                    #             'cost': weight_int
+                    #         }
+                    #     }
+                    # )
+                    update_record['ospf'].append([u, v, weight_int])
 
             external_nodes = [n for n in self.G.nodes() if self.G.nodes[n]["type"] == "external"]
             changed_external = random.sample(external_nodes, math.ceil(len(external_nodes) // 4))
@@ -202,15 +203,16 @@ class BgpBuilder:
                 bgp_route.local_preference = np.random.randint(0, 10) * 10
                 bgp_route.med = np.random.randint(0, 10)
 
-                update_record.append({
-                    'type': 'bgp_route',
-                    'location': external_node,
-                    'old_value': old_value,
-                    'new_value': {
-                        'local_preference': bgp_route.local_preference,
-                        'med': bgp_route.med
-                    }
-                })
+                # update_record.append({
+                #     'type': 'bgp_route',
+                #     'location': external_node,
+                #     'old_value': old_value,
+                #     'new_value': {
+                #         'local_preference': bgp_route.local_preference,
+                #         'med': bgp_route.med
+                #     }
+                # })
+                update_record['bgp_route'].append([external_node, bgp_route.local_preference, bgp_route.med])
             compute_forwarding_state(self.G)
             new_forward_table = self.get_forward_table()
             if not np.array_equal(old_forward_table, new_forward_table):  # 如果转发平面未发生变化，则重新改变权重
@@ -434,20 +436,22 @@ class BgpBuilder:
 
         edge_df.to_csv(os.path.join(self.network_root, "topology.csv"), index=False)
 
-    def gen_ini_file(self):
+    def gen_ini_file(self, flow_num):
         route_tabel = self.get_route_table().astype(str)
         table_str = '\\n'.join([' '.join(line) for line in route_tabel])
         with open("resource/ini_template.txt", 'r') as ini_file:
             ini_format = ini_file.read()
 
         node_info = []
+        flow_count = 0
         for n in self.G.nodes:
             node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].appType = \"{self.G.nodes[n]['type']}\"")
             node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].address = {n}")
-            if n in self.node_dst_map:
+            if n in self.node_dst_map and flow_count < flow_num:
                 node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].destAddresses = \"{self.node_dst_map[n]}\"")
+                flow_count += 1
             else:
-                node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].destAddresses = \"{n}\"")
+                node_info.append(f"Myned{str(self.net_seq)}.rte[{n}].destAddresses = \"{-1}\"")
 
         node_type_str = '\n'.join(node_info)
         ini_str = ini_format.format(str(self.net_seq), str(self.net_seq), str(self.net_seq), table_str,

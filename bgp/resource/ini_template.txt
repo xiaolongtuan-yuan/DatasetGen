@@ -1,7 +1,7 @@
 [General]
 network = networks.Myned{}
 result-dir = ../results/{}
-sim-time-limit = 50000s
+sim-time-limit = 10000s
 Myned{}.routingTableString = "{}"
 Myned{}.netId = {}
 {}
